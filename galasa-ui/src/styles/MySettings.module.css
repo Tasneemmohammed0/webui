@@ -18,7 +18,7 @@
     justify-content: space-between;
 }
 
-.tokenContainer {
+.tokenContainer, .experimentalFeaturesContainer {
     width: 90%;
     margin: 5rem auto;
 }
@@ -41,4 +41,22 @@
 
 .title{
     margin: 1rem 0;
+}
+
+.experimentalFeaturesHeaderContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.featureFlagsContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 1rem;
+}
+
+.featureFlag {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.5rem 0;
 }

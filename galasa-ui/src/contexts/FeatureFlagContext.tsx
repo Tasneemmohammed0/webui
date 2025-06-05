@@ -12,7 +12,8 @@ type FeatureFlags = {
 }
 
 type FeatureFlagContextType = {
-    shouldShowFeature: (feature: string) => boolean;
+    isFeatureEnabled: (feature: string) => boolean;
+    toggleFeatureFlag: (feature: string) => void;
 };
 
 const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined);
@@ -27,7 +28,13 @@ export const useFeatureFlags = () => {
 
 export const FeatureFlagProvider = ({ children }: {children: ReactNode}) => {
   const [featureFlags, setFeatureFlags] = useState<FeatureFlags>(() => {
-    // Initialize from localStorage on first render
+
+    // Check if running in a browser environment
+    if(typeof window === 'undefined') {
+      return {};
+    }
+
+    // Initialize from localStorage on first rende
     try {
       const storedFlags = localStorage.getItem('featureFlags');
       return storedFlags ? JSON.parse(storedFlags) : {};
@@ -47,13 +54,21 @@ export const FeatureFlagProvider = ({ children }: {children: ReactNode}) => {
     }
   }, [featureFlags]);
 
-  const shouldShowFeature = (feature: string): boolean => {
+  const toggleFeatureFlag = (feature: string) => {
+    setFeatureFlags(prevFlags => ({
+      ...prevFlags,
+      [feature]: !prevFlags[feature]
+    }));
+  };
+    
+
+  const isFeatureEnabled = (feature: string): boolean => {
     return featureFlags[feature] ?? false; 
   };
 
 
   return (
-    <FeatureFlagContext.Provider value={{ shouldShowFeature }}>
+    <FeatureFlagContext.Provider value={{ isFeatureEnabled, toggleFeatureFlag }}>
       {children}
     </FeatureFlagContext.Provider>
   );

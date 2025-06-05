@@ -8,6 +8,7 @@ import { getClientApiVersion, getServiceHealthStatus } from '@/utils/health';
 import Footer from '@/components/Footer';
 import PageHeader from '@/components/headers/PageHeader';
 import '@/styles/global.scss';
+import { FeatureFlagProvider } from '@/contexts/FeatureFlagContext';
 
 export const dynamic = "force-dynamic";
 
@@ -22,9 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="description" content="Galasa Ecosystem Web UI" />
       </head>
       <body>
-        <PageHeader galasaServiceName={galasaServiceName} />
+        <FeatureFlagProvider>
+            <PageHeader galasaServiceName={galasaServiceName} />
         {children}
         <Footer serviceHealthyPromise={getServiceHealthStatus()} clientVersionPromise={getClientApiVersion()}/>
+        </FeatureFlagProvider>
+      
       </body>
     </html>
   );
