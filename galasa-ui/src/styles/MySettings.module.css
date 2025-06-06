@@ -54,6 +54,20 @@
     margin: 1rem 1rem;
 }
 
+.featureFlagLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+}
+
+
+.featureFlagLabel input[type="checkbox"] {
+    accent-color: #0f62fe;
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
 .featureFlag {
     display: flex;
     flex-direction: row;
