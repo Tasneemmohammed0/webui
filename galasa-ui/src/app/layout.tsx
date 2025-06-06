@@ -27,9 +27,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <FeatureFlagProvider initialFlags={featureFlagsCookie}>
-            <PageHeader galasaServiceName={galasaServiceName} />
-        {children}
-        <Footer serviceHealthyPromise={getServiceHealthStatus()} clientVersionPromise={getClientApiVersion()}/>
+          <PageHeader galasaServiceName={galasaServiceName} />
+          {children}
+          <Footer serviceHealthyPromise={getServiceHealthStatus()} clientVersionPromise={getClientApiVersion()}/>
         </FeatureFlagProvider>
       
       </body>

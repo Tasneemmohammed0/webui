@@ -31,10 +31,10 @@ export default function PageHeader({ galasaServiceName }: { galasaServiceName: s
 
         <HeaderName href="/" prefix="">Galasa</HeaderName>
         
-          <HeaderNavigation aria-label="Galasa menu bar navigation">
-            <HeaderMenuItem href="/users">Users</HeaderMenuItem>
-            {isFeatureEnabled("testRuns") && (<HeaderMenuItem href="/test-runs">Test runs</HeaderMenuItem>)}
-          </HeaderNavigation>
+        <HeaderNavigation aria-label="Galasa menu bar navigation">
+          <HeaderMenuItem href="/users">Users</HeaderMenuItem>
+          {isFeatureEnabled("testRuns") && (<HeaderMenuItem href="/test-runs">Test runs</HeaderMenuItem>)}
+        </HeaderNavigation>
      
 
         <PageHeaderMenu galasaServiceName={galasaServiceName} />

@@ -9,8 +9,8 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import FeatureFlagCookies from '@/utils/featureFlagCookies';
 
 const DEFAULT_FEATURE_FLAGS = {
-    testRuns: false, 
-    // Add other feature flags here
+  testRuns: false, 
+  // Add other feature flags here
 } as const;
 
 type FeatureFlags = {
@@ -40,27 +40,27 @@ export const useFeatureFlags = (): FeatureFlagContextType => {
 
 export const FeatureFlagProvider = ({ children, initialFlags }: ProviderProps) => {
   // Initialize feature flags state with default values or from the initialFlags prop
-    const [featureFlags, setFeatureFlags] = useState<FeatureFlags>(() => {
-      if (initialFlags) {
-        try {
-          const parsedFlags = JSON.parse(initialFlags);
-          return { ...DEFAULT_FEATURE_FLAGS, ...parsedFlags };
-        } catch (error) {
-          console.error('Error parsing initial feature flags:', error);
-          return DEFAULT_FEATURE_FLAGS;
-        }
+  const [featureFlags, setFeatureFlags] = useState<FeatureFlags>(() => {
+    if (initialFlags) {
+      try {
+        const parsedFlags = JSON.parse(initialFlags);
+        return { ...DEFAULT_FEATURE_FLAGS, ...parsedFlags };
+      } catch (error) {
+        console.error('Error parsing initial feature flags:', error);
+        return DEFAULT_FEATURE_FLAGS;
       }
-      return DEFAULT_FEATURE_FLAGS;
+    }
+    return DEFAULT_FEATURE_FLAGS;
   });
 
 
   // Save feature flags to the cookie whenever they change
   useEffect(() => {
-      const date = new Date();
-      date.setFullYear(date.getFullYear() + 1); // Set expiry for 1 year
-      const expires = `expires=${date.toUTCString()}`;
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 1); // Set expiry for 1 year
+    const expires = `expires=${date.toUTCString()}`;
       
-      document.cookie = `${FeatureFlagCookies.FEATURE_FLAGS}=${JSON.stringify(featureFlags)};${expires};path=/`;
+    document.cookie = `${FeatureFlagCookies.FEATURE_FLAGS}=${JSON.stringify(featureFlags)};${expires};path=/`;
   }, [featureFlags]);
 
   const toggleFeatureFlag = (feature: FeatureFlagKey) => {

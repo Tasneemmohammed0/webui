@@ -11,14 +11,14 @@ import styles from "@/styles/TestRunsPage.module.css";
 
 export default function TestRunsPage() {
   return (
-      <main id="content">
-        <BreadCrumb />
-        <PageTile title={"Test Runs"} />
-        <div className={styles.testRunsContentWrapper}>
-          <p className={styles.underConstruction}>
+    <main id="content">
+      <BreadCrumb />
+      <PageTile title={"Test Runs"} />
+      <div className={styles.testRunsContentWrapper}>
+        <p className={styles.underConstruction}>
             This page is under construction. Please come back later to query a list of test runs.
-          </p>
-        </div>
-      </main>   
+        </p>
+      </div>
+    </main>   
   );
 };

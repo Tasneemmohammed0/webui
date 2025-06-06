@@ -14,8 +14,8 @@ export default function ExperimentalFeaturesSection() {
   // Feature configuration for easier management and display
   const featureConfig = [
     {
-        key: 'testRuns' as const,
-        label: 'Test Run searching and viewing',
+      key: 'testRuns' as const,
+      label: 'Test Run searching and viewing',
     },
     // Add more features here when they are added to DEFAULT_FEATURE_FLAGS
   ];
@@ -25,7 +25,7 @@ export default function ExperimentalFeaturesSection() {
       <h3 className={styles.title}>Experimental Features</h3>
       <div className={styles.experimentalFeaturesHeaderContainer}>
         <p className={styles.heading}>Early access to new features. These are experimental and subject to change or removal.</p>
-         <ul className={styles.featureFlagsContainer}>
+        <ul className={styles.featureFlagsContainer}>
           {featureConfig.map(({ key, label }) => (
             <li key={key} className={styles.featureFlag}>
               <label className={styles.featureFlagLabel}>

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import PageHeaderMenu from '@/components/headers/PageHeaderMenu';
 import PageHeader from '@/components/headers/PageHeader';
 import React from 'react';
+import { FeatureFlagProvider } from '@/contexts/FeatureFlagContext';
 
 const fetchMock = jest.spyOn(global, 'fetch');
 
@@ -29,7 +30,10 @@ afterEach(() => {
 
 test('renders the header containing the header menu', () => {
 
-  render(<PageHeader galasaServiceName='Galasa Service' />);
+  render(
+    <FeatureFlagProvider>
+      <PageHeader galasaServiceName='Galasa Service' />
+    </FeatureFlagProvider>);
 
   const headerMenu = screen.getByTestId('header-menu');
   expect(headerMenu).toBeInTheDocument();

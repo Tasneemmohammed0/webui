@@ -21,6 +21,12 @@ const mockGetOpenApiSpecFunc = jest.fn().mockReturnValue(
   })
 );
 
+jest.mock('next/headers', () => ({
+  cookies: () => ({
+    get: jest.fn(),
+  }),
+}));
+
 jest.mock('next/navigation', () => ({
 
   useRouter: jest.fn(() => mockRouter),

@@ -74,19 +74,6 @@ exports[`Layout renders the web UI layout 1`] = `
                       </span>
                     </a>
                   </li>
-                  <li>
-                    <a
-                      class="cds--header__menu-item"
-                      href="/test-runs"
-                      tabindex="0"
-                    >
-                      <span
-                        class="cds--text-truncate--end"
-                      >
-                        Test runs
-                      </span>
-                    </a>
-                  </li>
                 </ul>
               </nav>
               <div
@@ -247,19 +234,6 @@ exports[`Layout renders the web UI layout 1`] = `
                       class="cds--text-truncate--end"
                     >
                       Users
-                    </span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="cds--header__menu-item"
-                    href="/test-runs"
-                    tabindex="0"
-                  >
-                    <span
-                      class="cds--text-truncate--end"
-                    >
-                      Test runs
                     </span>
                   </a>
                 </li>
