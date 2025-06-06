@@ -15,7 +15,6 @@ import BreadCrumb from '@/components/common/BreadCrumb';
 import { fetchAccessTokens } from '../../actions/getUserAccessTokens';
 import ErrorPage from '../error/page';
 import ExperimentalFeaturesSection from '@/components/ExperimentalFeaturesSection';
-import { FeatureFlagProvider } from '@/contexts/FeatureFlagContext';
 
 export default async function MySettings() {
   const apiConfig = createAuthenticatedApiConfiguration();

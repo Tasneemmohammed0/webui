@@ -10,9 +10,10 @@ import PageHeaderMenu from "./PageHeaderMenu";
 import Image from 'next/image';
 import galasaLogo from "@/assets/images/galasaLogo.png";
 import Link from 'next/link';
+import { useFeatureFlags } from '@/contexts/FeatureFlagContext';
 
 export default function PageHeader({ galasaServiceName }: { galasaServiceName: string }) {
-
+  const {isFeatureEnabled} = useFeatureFlags();
   return (
     <Theme theme="g90">
       <Header aria-label="Galasa Ecosystem">
@@ -29,11 +30,12 @@ export default function PageHeader({ galasaServiceName }: { galasaServiceName: s
         </Link>
 
         <HeaderName href="/" prefix="">Galasa</HeaderName>
-
-        <HeaderNavigation aria-label="Galasa menu bar navigation">
-          <HeaderMenuItem href="/users">Users</HeaderMenuItem>
-          <HeaderMenuItem href="/test-runs">Test runs</HeaderMenuItem>
-        </HeaderNavigation>
+        
+          <HeaderNavigation aria-label="Galasa menu bar navigation">
+            <HeaderMenuItem href="/users">Users</HeaderMenuItem>
+            {isFeatureEnabled("testRuns") && (<HeaderMenuItem href="/test-runs">Test runs</HeaderMenuItem>)}
+          </HeaderNavigation>
+     
 
         <PageHeaderMenu galasaServiceName={galasaServiceName} />
 

@@ -6,19 +6,31 @@
 'use client';
 
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import FeatureFlagCookies from '@/utils/featureFlagCookies';
+
+const DEFAULT_FEATURE_FLAGS = {
+    testRuns: false, 
+    // Add other feature flags here
+} as const;
 
 type FeatureFlags = {
-    [key: string]: boolean;
-}
+  [K in keyof typeof DEFAULT_FEATURE_FLAGS]: boolean;
+};
+type FeatureFlagKey = keyof FeatureFlags;
 
 type FeatureFlagContextType = {
-    isFeatureEnabled: (feature: string) => boolean;
-    toggleFeatureFlag: (feature: string) => void;
+    isFeatureEnabled: (feature: FeatureFlagKey) => boolean;
+    toggleFeatureFlag: (feature: FeatureFlagKey) => void;
 };
+
+type ProviderProps = {
+    children: ReactNode;
+    initialFlags?: string;
+}
 
 const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined);
 
-export const useFeatureFlags = () => {
+export const useFeatureFlags = (): FeatureFlagContextType => {
   const context = useContext(FeatureFlagContext);
   if (!context) {
     throw new Error('useFeatureFlags must be used within a FeatureFlagProvider');
@@ -26,35 +38,32 @@ export const useFeatureFlags = () => {
   return context;
 };
 
-export const FeatureFlagProvider = ({ children }: {children: ReactNode}) => {
-  const [featureFlags, setFeatureFlags] = useState<FeatureFlags>(() => {
-
-    // Check if running in a browser environment
-    if(typeof window === 'undefined') {
-      return {};
-    }
-
-    // Initialize from localStorage on first rende
-    try {
-      const storedFlags = localStorage.getItem('featureFlags');
-      return storedFlags ? JSON.parse(storedFlags) : {};
-    }
-    catch (error) {
-      console.error('Error loading feature flags from localStorage:', error);
-      return {};
-    }
+export const FeatureFlagProvider = ({ children, initialFlags }: ProviderProps) => {
+  // Initialize feature flags state with default values or from the initialFlags prop
+    const [featureFlags, setFeatureFlags] = useState<FeatureFlags>(() => {
+      if (initialFlags) {
+        try {
+          const parsedFlags = JSON.parse(initialFlags);
+          return { ...DEFAULT_FEATURE_FLAGS, ...parsedFlags };
+        } catch (error) {
+          console.error('Error parsing initial feature flags:', error);
+          return DEFAULT_FEATURE_FLAGS;
+        }
+      }
+      return DEFAULT_FEATURE_FLAGS;
   });
 
-  // Save feature flags to localStorage whenever they change
+
+  // Save feature flags to the cookie whenever they change
   useEffect(() => {
-    try {
-      localStorage.setItem('featureFlags', JSON.stringify(featureFlags));
-    } catch (error) {
-      console.error('Error saving feature flags to localStorage:', error);
-    }
+      const date = new Date();
+      date.setFullYear(date.getFullYear() + 1); // Set expiry for 1 year
+      const expires = `expires=${date.toUTCString()}`;
+      
+      document.cookie = `${FeatureFlagCookies.FEATURE_FLAGS}=${JSON.stringify(featureFlags)};${expires};path=/`;
   }, [featureFlags]);
 
-  const toggleFeatureFlag = (feature: string) => {
+  const toggleFeatureFlag = (feature: FeatureFlagKey) => {
     setFeatureFlags(prevFlags => ({
       ...prevFlags,
       [feature]: !prevFlags[feature]
@@ -62,13 +71,13 @@ export const FeatureFlagProvider = ({ children }: {children: ReactNode}) => {
   };
     
 
-  const isFeatureEnabled = (feature: string): boolean => {
+  const isFeatureEnabled = (feature: FeatureFlagKey): boolean => {
     return featureFlags[feature] ?? false; 
   };
 
 
   return (
-    <FeatureFlagContext.Provider value={{ isFeatureEnabled, toggleFeatureFlag }}>
+    <FeatureFlagContext.Provider value={{ isFeatureEnabled, toggleFeatureFlag}}>
       {children}
     </FeatureFlagContext.Provider>
   );
