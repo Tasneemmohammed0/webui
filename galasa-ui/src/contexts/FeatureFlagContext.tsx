@@ -28,7 +28,7 @@ type ProviderProps = {
     initialFlags?: string;
 }
 
-const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined);
+export const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined);
 
 export const useFeatureFlags = (): FeatureFlagContextType => {
   const context = useContext(FeatureFlagContext);
