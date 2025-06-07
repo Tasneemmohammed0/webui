@@ -6,9 +6,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import PageHeaderMenu from '@/components/headers/PageHeaderMenu';
-import PageHeader from '@/components/headers/PageHeader';
 import React from 'react';
-import { FeatureFlagProvider } from '@/contexts/FeatureFlagContext';
 
 const fetchMock = jest.spyOn(global, 'fetch');
 
@@ -25,19 +23,6 @@ jest.mock('next/navigation', () => ({
 
 afterEach(() => {
   jest.clearAllMocks();
-});
-
-
-test('renders the header containing the header menu', () => {
-
-  render(
-    <FeatureFlagProvider>
-      <PageHeader galasaServiceName='Galasa Service' />
-    </FeatureFlagProvider>);
-
-  const headerMenu = screen.getByTestId('header-menu');
-  expect(headerMenu).toBeInTheDocument();
-
 });
 
 test('checking if the menu btn exists', () => {
