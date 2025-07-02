@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import TestRunsTable from '@/components/test-runs/TestRunsTable';
-import { TestRunsData } from '@/app/test-runs/page';
+import { TestRunsData } from '@/utils/testRuns';
 import { MAX_RECORDS } from '@/utils/constants/common';
 
 // Mock the useRouter hook from Next.js to return a mock router object.
@@ -24,7 +24,8 @@ jest.mock("next-intl", () => ({
     const translations: Record<string, string> = {
       "timeFrameText.range": "Showing test runs submitted between Jan 1 and Jan 10",
       "pagination.forwardText": "Next page",
-      "noTestRunsFound":"No test runs were found for the selected timeframe"
+      "noTestRunsFound":"No test runs were found for the selected timeframe",
+      "pagination.of": "of {total}"
     };
 
     let text = translations[key] || key;
@@ -38,9 +39,6 @@ jest.mock("next-intl", () => ({
     return text;
   },
 }));
-
-
-
 
 jest.mock('@/app/error/page', () =>
   function MockErrorPage() {
@@ -157,6 +155,8 @@ describe('TestRunsTable Interactions', () => {
     
     // Assert initial state
     expect(within(table).getAllByRole('row')).toHaveLength(11); // 1 header + 10 data
+    // Assert correct page range text
+    expect(screen.getByText(/of 2/i)).toBeInTheDocument();
     expect(screen.queryByText('Test Run 11')).not.toBeInTheDocument();
 
     // Act
