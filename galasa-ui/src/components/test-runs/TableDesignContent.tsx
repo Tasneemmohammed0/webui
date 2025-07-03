@@ -109,7 +109,7 @@ export default function TableDesignContent({selectedRowIds, setSelectedRowIds, t
             <strong>{translations("showHideHeader")}</strong>
             <Checkbox
               aria-label="Select all rows" 
-              id="checkbox-all"
+              id="columns-checkbox-all"
               checked={selectedRowIds.length > 0 && selectedRowIds.length === tableRows.length}
               onChange={handleSelectAll}
             />

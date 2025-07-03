@@ -59,7 +59,7 @@ export default function CheckBoxList({ title, items, selectedItems, onChange, on
         className={styles.checkBoxList}
       >
         <Checkbox
-          id="checkbox-all"
+          id="status-checkbox-all"
           labelText="All"
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleAllChange(event.target.checked)} 
           checked={areAllSelected}

@@ -198,7 +198,7 @@ export default function SearchCriteriaContent({requestorNamesPromise, resultsNam
     const savedValue = query.get(selectedFilter.id) || '';
     let isDisabled = false;
 
-    const splitSavedValue = savedValue ? savedValue.split(',') : [];
+    const splitSavedValue = savedValue ? savedValue.split(',').sort() : [];
     switch (selectedFilter.id) {
     case 'result': {
       const savedResults = splitSavedValue;
