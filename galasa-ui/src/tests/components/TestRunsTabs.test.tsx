@@ -197,7 +197,7 @@ describe('TestRunsTabs Component', () => {
       const expectedParams = new URLSearchParams();
       const defaultVisible = "submittedAt,testRunName,requestor,testName,status,result";
       const defaultOrder = "submittedAt,testRunName,requestor,testName,status,result";
-      expectedParams.set('tab', 'timeframe')
+      expectedParams.set('tab', 'timeframe');
       expectedParams.set('visibleColumns', defaultVisible);
       expectedParams.set('columnsOrder', defaultOrder);
   

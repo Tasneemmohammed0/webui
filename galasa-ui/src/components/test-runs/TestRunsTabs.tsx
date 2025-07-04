@@ -62,8 +62,8 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
     // Parse the order from the URL parameter
     if (orderParam) {
       correctOrder = orderParam.split(',')
-      .map(id => RESULTS_TABLE_COLUMNS.find(col => col.id === id))
-      .filter(Boolean) as { id: string; columnName: string }[];
+        .map(id => RESULTS_TABLE_COLUMNS.find(col => col.id === id))
+        .filter(Boolean) as { id: string; columnName: string }[];
     }
 
     return correctOrder;
@@ -74,12 +74,12 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
   useEffect(() => {setIsInitialized(true);}, []);
 
   // Define the tabs with their corresponding labels
-  const TABS_CONFIG: TabConfig[] = useMemo(() => [
+  const TABS_CONFIG: TabConfig[] = [
     { id: TABS_IDS[0], label: translations('tabs.timeframe') },
     { id: TABS_IDS[1], label: translations('tabs.tableDesign') },
     { id: TABS_IDS[2], label: translations('tabs.searchCriteria') },
     { id: TABS_IDS[3], label: translations('tabs.results') },
-  ], [translations]);
+  ];
 
   // Save to URL parameters (only after initialization)
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
   const handleTabChange = (event: {selectedIndex : number}) => {
     const currentIndex = event.selectedIndex;
     setSelectedIndex(currentIndex);
-  }
+  };
 
   return (
     <Tabs 
@@ -113,7 +113,7 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
           <Tab key={tab.label}>{tab.label}</Tab>
         ))}
       </TabList>
-    <TabPanels>
+      <TabPanels>
         <TabPanel>
           <div className={styles.tabContent}><TimeframeContent /></div>
         </TabPanel>
