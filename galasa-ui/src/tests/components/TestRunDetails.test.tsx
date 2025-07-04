@@ -7,7 +7,6 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import TestRunDetails from '@/components/test-runs/TestRunDetails';
 
-
 function setup<T>() {
   let resolve!: (value: T) => void;
   let reject!: (reason?: any) => void;
@@ -18,6 +17,27 @@ function setup<T>() {
   return { promise, resolve, reject };
 }
 
+// Mock sessionStorage
+const sessonStorageMock = (() => {
+  let store: { [key: string]: string } = {};
+  return {
+    setItem(key: string, value: string) {
+      store[key] = value;
+    },
+    getItem(key: string) {
+      return store[key] || null;
+    }, 
+    clear() {
+      store = {};
+    },
+  };
+})();
+
+Object.defineProperty(window, 'sessionStorage', {
+  value: sessonStorageMock,
+  writable: true,
+});
+
 // Mocking next-intl
 jest.mock('next-intl', () => ({
   useTranslations: () => (key: string, opts?: any) =>
@@ -25,7 +45,16 @@ jest.mock('next-intl', () => ({
 }));
 
 jest.mock('@/components/common/BreadCrumb', () => {
-  const BreadCrumb = () => <nav>Breadcrumb</nav>;
+  const BreadCrumb = ({ breadCrumbItems }: { breadCrumbItems: any[] }) => {
+    const testRunsItem = breadCrumbItems.find(
+      (item) => item.title === 'testRuns'
+    );
+    return (
+      <nav data-testid="breadcrumb" data-route={testRunsItem?.route || ''}>
+        Breadcrumb
+      </nav>
+    );
+  };
   BreadCrumb.displayName = 'BreadCrumb';
   return {
     __esModule: true,
@@ -139,6 +168,10 @@ jest.mock('@carbon/react', () => {
 describe('TestRunDetails', () => {
   const runId = 'run-123';
 
+  beforeEach(() => {
+    sessonStorageMock.clear();
+  });
+
   it('shows the skeleton while loading', async () => {
     const runDetailsDeferred = setup<any>();
     const runArtifactsDeferred = setup<any[]>();
@@ -250,4 +283,59 @@ describe('TestRunDetails', () => {
 
     expect(await screen.findByText('ErrorPage')).toBeInTheDocument();
   });
+
+  it('build savedQuery from the sessionStorage and clears it', async () => {
+    const runDetailsDeferred = setup<any>();
+    const runArtifactsDeferred = setup<any[]>();
+    const runLogDeferred = setup<string>();
+
+    // Set a query string in sessionStorage
+    const queryString = 'status=Finished&result=Success';
+    sessionStorage.setItem('testRunsQuery', queryString);
+
+    // Verify it is set correctly
+    expect(sessionStorage.getItem('testRunsQuery')).toBe(queryString);
+
+    render(
+      <TestRunDetails
+        runId={runId}
+        runDetailsPromise={runDetailsDeferred.promise}
+        runArtifactsPromise={runArtifactsDeferred.promise}
+        runLogPromise={runLogDeferred.promise}
+      />
+    );
+
+    // Check the breadcrumb props
+    const breadcrumb = screen.getByTestId('breadcrumb');
+
+    // Check if the link is correc
+    expect(breadcrumb).toHaveAttribute('data-route', `/test-runs?${queryString}`);
+
+    // Resolve the promises to ensure the component loads correctly
+    await act(async () => {
+      runDetailsDeferred.resolve({
+        testStructure: {
+          methods: [],
+          result: 'PASS',
+          status: 'OK',
+          runName: 'r1',
+          testShortName: 't1',
+          bundle: 'b1',
+          submissionId: 's1',
+          group: 'g1',
+          requestor: 'u1',
+          queued: '2025-01-01T00:00:00Z',
+          startTime: '2025-01-01T00:00:00Z',
+          endTime: '2025-01-01T01:00:00Z',
+          tags: [],
+        },
+      });
+      runArtifactsDeferred.resolve([]);
+      runLogDeferred.resolve('');
+    });
+
+    // Final check to ensure breadcrumb still has the correct route after loading
+    expect(breadcrumb).toHaveAttribute('data-route', `/test-runs?${queryString}`);
+  });
+
 });
