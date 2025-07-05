@@ -13,8 +13,9 @@ import TableDesignContent from './TableDesignContent';
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { TestRunsData } from "@/utils/testRuns";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { RESULTS_TABLE_COLUMNS, COLUMNS_IDS} from '@/utils/constants/common';
+import { useQuery } from '@tanstack/react-query';
 
 interface TabConfig {
   id: string;
@@ -72,12 +73,6 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
   const [isInitialized, setIsInitialized] = useState(false);
   useEffect(() => {setIsInitialized(true);}, []);
 
-  const [runsData, setRunsData] = useState<TestRunsData | null>(null);
-  const [error, isError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const lastFetchedParamsRef = useRef<string | null>(null);
-
   // Define the tabs with their corresponding labels
   const TABS_CONFIG: TabConfig[] = [
     { id: TABS_IDS[0], label: translations('tabs.timeframe') },
@@ -107,30 +102,52 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     setSelectedIndex(currentIndex);
   };
 
-  // Fetch the runs list when results tab is selected
-  useEffect(() => {
-    // If params are not changed, do not fetch again
-    if (selectedIndex === TABS_IDS.indexOf('results') 
-    ) {
-  console.log("Search params", searchParams);
-      const fetchData = async () => {
-        try {
-          const response = await fetch(`/api/test-runs?${searchParams.toString()}`);
-          console.log("Response:", response);
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to fetch test runs');  
-          }
+  // Create a canonical query key based on the search parameters so that it won't refetch unnecessarily
+  const queryKey = useMemo(() => {
+    // Parameters that actually affect the data fetch
+    const relevantParameters = [
+      'from', 'to', 'runName', 'requestor', 'group',
+      'submissionId', 'bundle', 'testName', 'result', 'status', 'tags'
+    ];
 
-          const data: TestRunsData = await response.json();
-          setRunsData(data);
-        } catch (error) {
-          console.error("Error fetching test runs:", error);
-        };
+    // Create a new URLSearchParams object with the data that actually affects data fetch
+    const canonicalParams: Record<string, string> = {}
+    for (const key of relevantParameters) {
+      if (searchParams.has(key)) {
+        let value = searchParams.get(key) || '';
+
+        // Normalize order-independent parameters
+        if (key === 'tags' ||
+            key === 'result' || 
+            key === 'status' || 
+            key === 'requestor') {
+          value = value?.split(',').sort().join(',');
+        }
+
+        canonicalParams[key] = value;
       }
-      fetchData();
     }
-  }, [selectedIndex, searchParams.toString()])
+    
+    return ['testRuns', canonicalParams];
+  }, [searchParams])
+
+  const {data: runsData, isLoading, isError } = useQuery<TestRunsData>({
+    // Cache data based on search parameters
+    queryKey: queryKey,
+    queryFn: async () => {
+      const response = await fetch(`/api/test-runs?${searchParams.toString()}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch test runs');
+      }
+      
+      return response.json() as Promise<TestRunsData>;
+    },
+    // Only run the query when the results tab is selected
+    enabled: selectedIndex === TABS_IDS.indexOf('results'), 
+    // Only refetch when the canonical query key changes
+    staleTime: Infinity,
+  });
 
   return (
     <Tabs 
@@ -172,6 +189,8 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
               limitExceeded={runsData?.limitExceeded ?? false}
               visibleColumns={selectedVisibleColumns}
               orderedHeaders={columnsOrder}
+              isLoading={isLoading}
+              isError={isError}
             />
           </div>
         </TabPanel>

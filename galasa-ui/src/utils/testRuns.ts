@@ -55,6 +55,20 @@ export const fetchAllTestRunsByPaging  = async ({fromDate, toDate, runName, requ
   
   if (fromDate > toDate) return {runs: [] , limitExceeded};
   
+  console.log("Fetching test runs with the following parameters:", {
+    fromDate: fromDate.toISOString(),
+    toDate: toDate.toISOString(),   
+    runName,
+    requestor,
+    group,
+    submissionId,
+    bundle,
+    testName,
+    result,
+    status,
+    tags
+  });
+  
   try {
     const apiConfig = createAuthenticatedApiConfiguration();
     const rasApiClient = new ResultArchiveStoreAPIApi(apiConfig);

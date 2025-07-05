@@ -1,3 +1,8 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
 import {fetchAllTestRunsByPaging} from "@/utils/testRuns";
 import { getYesterday } from '@/utils/timeOperations';
 import { NextRequest, NextResponse } from 'next/server';
@@ -5,7 +10,6 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
 
-    console.log("Received search parameters:", Object.fromEntries(searchParams.entries()));
     const params = {
         fromDate: searchParams.has('from') ? new Date(searchParams.get('from')!) : getYesterday(),
         toDate: searchParams.has('to') ? new Date(searchParams.get('to')!) : new Date(),
@@ -22,7 +26,6 @@ export async function GET(request: NextRequest) {
 
     try {
         const data = await fetchAllTestRunsByPaging(params);
-        console.log("Fetched test runs data:",  NextResponse.json(data));
         return NextResponse.json(data);
     } catch (error) {
         console.error("Error fetching test runs:", error);

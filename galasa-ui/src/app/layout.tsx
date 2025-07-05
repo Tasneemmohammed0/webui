@@ -13,6 +13,7 @@ import { FeatureFlagProvider } from '@/contexts/FeatureFlagContext';
 import { cookies } from 'next/headers';
 import FeatureFlagCookies from '@/utils/featureFlagCookies';
 import { getLocale } from 'next-intl/server';
+import ReactQueryProvider from '@/contexts/ReactQueryProvider';
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,9 @@ export default async function RootLayout({children,}: {children: React.ReactNode
         <NextIntlClientProvider>
           <FeatureFlagProvider initialFlags={featureFlagsCookie}>
             <PageHeader galasaServiceName={galasaServiceName} />
-            {children}
+            <ReactQueryProvider>
+              {children}
+            </ReactQueryProvider>
             <Footer serviceHealthyPromise={getServiceHealthStatus()} clientVersionPromise={getClientApiVersion()}/>
           </FeatureFlagProvider>
         </NextIntlClientProvider>

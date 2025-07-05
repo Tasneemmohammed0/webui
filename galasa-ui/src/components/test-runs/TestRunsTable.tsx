@@ -28,10 +28,9 @@ import { TableRowProps } from "@carbon/react/lib/components/DataTable/TableRow";
 import { TableHeadProps } from "@carbon/react/lib/components/DataTable/TableHead";
 import { TableBodyProps } from "@carbon/react/lib/components/DataTable/TableBody";
 import StatusIndicator from "../common/StatusIndicator";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ErrorPage from "@/app/error/page";
-import { TestRunsData } from "@/utils/testRuns";
 import { MAX_RECORDS} from "@/utils/constants/common";
 import { useTranslations } from "next-intl";
 import { InlineNotification } from "@carbon/react";
@@ -93,9 +92,11 @@ interface TestRunsTableProps {
   limitExceeded: boolean;
   visibleColumns: string[];
   orderedHeaders?: { id: string; columnName: string }[];
+  isLoading?: boolean;
+  isError?: boolean;
 }
 
-export default function TestRunsTable({runsList,limitExceeded, visibleColumns, orderedHeaders}: TestRunsTableProps) {
+export default function TestRunsTable({runsList,limitExceeded, visibleColumns, orderedHeaders, isLoading, isError}: TestRunsTableProps) {
   const translations = useTranslations("TestRunsTable");
 
   const router = useRouter();
@@ -103,8 +104,6 @@ export default function TestRunsTable({runsList,limitExceeded, visibleColumns, o
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
 
   const headers = orderedHeaders?.filter(column => visibleColumns.includes(column.id)).map(column => ({
     key: column.id,
