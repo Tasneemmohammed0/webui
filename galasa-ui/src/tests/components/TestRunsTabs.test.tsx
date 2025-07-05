@@ -94,9 +94,14 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ runs: [], limitExceeded: false }),
+  })
+) as jest.Mock;
 
 const queryClient = new QueryClient();
-
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
@@ -264,4 +269,92 @@ describe('TestRunsTabs Component', () => {
       expect(params.get('visibleColumns')).toBe('submittedAt,testRunName,requestor,testName,status,result');
     });
   });
+
+  describe('Data Fetching with useQuery', () => {
+    beforeEach(() => {
+      // Clear call history for fetch before each test
+      (global.fetch as jest.Mock).mockClear();
+      queryClient.clear();
+    });
+
+    test('does not fetch data on initial render if "Results" tab is not active', () => {
+      mockUseSearchParams.mockReturnValue(new URLSearchParams());
+      render(
+        <TestRunsTabs
+          requestorNamesPromise={mockRequestorNamesPromise}
+          resultsNamesPromise={mockResultsNamesPromise}
+        />, { wrapper }
+      );
+
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    test('fetches data when "Results" tab is selected', async () => {
+      mockUseSearchParams.mockReturnValue(new URLSearchParams());
+      render(
+        <TestRunsTabs
+          requestorNamesPromise={mockRequestorNamesPromise}
+          resultsNamesPromise={mockResultsNamesPromise}
+        />, { wrapper }
+      );
+
+      expect(global.fetch).not.toHaveBeenCalled();
+
+      // Navigate to results tab
+      fireEvent.click(screen.getByRole('tab', { name: 'Results' }));
+      await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+    });
+
+    test('serves data from cache and does not refetch when switching tabs with same query', async () => {
+      mockUseSearchParams.mockReturnValue((new URLSearchParams("requestor=user1&result=passed")));
+      render(
+        <TestRunsTabs
+          requestorNamesPromise={mockRequestorNamesPromise}
+          resultsNamesPromise={mockResultsNamesPromise}
+        />, { wrapper }
+      );
+
+      // Initial fetch 
+      const resultsTab = screen.getByRole('tab', { name: 'Results' });
+      fireEvent.click(resultsTab);
+      await waitFor(() => expect(resultsTab).toHaveAttribute('aria-selected', 'true'));
+      await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+
+      // Switch to another tab and back
+      const timeFrameTab = screen.getByRole('tab', { name: 'Timeframe' });
+      fireEvent.click(timeFrameTab);
+      await waitFor(() => expect(timeFrameTab).toHaveAttribute('aria-selected', 'true'));
+
+      fireEvent.click(resultsTab);
+      await waitFor(() => expect(resultsTab).toHaveAttribute('aria-selected', 'true'));
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    test('does NOT trigger a new fetch when a UI-only param changes', async () => {
+      mockUseSearchParams.mockReturnValue(new URLSearchParams("requestor=user1&result=passed"));
+      const {rerender} = render(
+        <TestRunsTabs
+          requestorNamesPromise={mockRequestorNamesPromise}
+          resultsNamesPromise={mockResultsNamesPromise}
+        />, { wrapper }
+      );
+
+      // Initial fetch 
+      fireEvent.click(screen.getByRole('tab', { name: 'Results' }));
+      await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+
+      // Change a UI-only param (e.g., visibleColumns)
+      mockUseSearchParams.mockReturnValue(new URLSearchParams("requestor=user1&result=passed&visibleColumns=status,result"));
+      rerender(
+        <TestRunsTabs
+          requestorNamesPromise={mockRequestorNamesPromise}
+          resultsNamesPromise={mockResultsNamesPromise}
+        />
+      );
+
+      // Ensure no new fetch is triggered
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    })
+
+  })
 });
