@@ -6,7 +6,7 @@
 import { ResultArchiveStoreAPIApi, Run, RunResults, UserData } from "@/generated/galasaapi";
 import { createAuthenticatedApiConfiguration } from "@/utils/api";
 import { CLIENT_API_VERSION, MAX_RECORDS, BATCH_SIZE } from "@/utils/constants/common";
-import { fetchAllUsersFromApiServer } from "@/app/users/page";
+import { fetchAllUsersFromApiServer } from "@/utils/users";
 
 /**
  * The structure returned by the data fetching function.
