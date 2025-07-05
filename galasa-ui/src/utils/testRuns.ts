@@ -26,6 +26,7 @@ interface fetchAllTestRunsByPagingParams {
     bundle?: string;
     testName?: string;
     result?: string;
+    status?: string; 
     tags?: string;
 }
   
@@ -46,7 +47,7 @@ interface fetchAllTestRunsByPagingParams {
    * @param {string} [tags] - The tags to filter by (optional).
    * @returns {Promise<TestRunsData>} - A promise that resolves to an object containing the runs and a flag indicating if the limit was reached.
    */
-export const fetchAllTestRunsByPaging  = async ({fromDate, toDate, runName, requestor, group, submissionId, bundle, testName, result, tags}: fetchAllTestRunsByPagingParams): Promise<TestRunsData> => {
+export const fetchAllTestRunsByPaging  = async ({fromDate, toDate, runName, requestor, group, submissionId, bundle, testName, result,status, tags}: fetchAllTestRunsByPagingParams): Promise<TestRunsData> => {
   let allRuns = [] as Run[];
   let currentCursor: string | undefined = undefined;
   let hasMorePages = true;
@@ -64,7 +65,7 @@ export const fetchAllTestRunsByPaging  = async ({fromDate, toDate, runName, requ
         'from:desc',
         CLIENT_API_VERSION,
         result,
-        undefined, // status
+        status, // status
         bundle,
         requestor, 
         fromDate, 

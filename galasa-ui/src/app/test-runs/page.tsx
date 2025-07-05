@@ -9,24 +9,22 @@ import TestRunsTabs from "@/components/test-runs/TestRunsTabs";
 import styles from "@/styles/TestRunsPage.module.css";
 import { HOME } from "@/utils/constants/breadcrumb";
 import { Suspense } from "react";
-import { getYesterday } from "@/utils/timeOperations";
-import { fetchAllTestRunsByPaging, getRequestorList, getResultsNames } from '@/utils/testRuns';
+import { getRequestorList, getResultsNames } from '@/utils/testRuns';
 
 
-export default async function TestRunsPage({searchParams}: {searchParams: {[key: string]: string | undefined}} ) {
-  const fromDate = searchParams?.from ? new Date(searchParams.from) : getYesterday();
-  const toDate = searchParams?.to ? new Date(searchParams.to) : new Date();
-  const { runName, requestor, group, submissionId, bundle, testName, result, tags } = searchParams || {};
+export default async function TestRunsPage() {
+  const requestorNamesPromise = getRequestorList();
+  const resultsNamesPromise = getResultsNames();
+
   return (
     <main id="content">
       <BreadCrumb breadCrumbItems={[HOME]} />
       <PageTile translationKey={"TestRun.title"} />
       <div className={styles.testRunsContentWrapper}>
         <Suspense fallback={<p>Loading...</p>}>
-          <TestRunsTabs 
-            runsListPromise={fetchAllTestRunsByPaging({fromDate, toDate, runName, requestor, group, submissionId, bundle, testName, result, tags})} 
-            requestorNamesPromise={getRequestorList()} 
-            resultsNamesPromise={getResultsNames()} 
+          <TestRunsTabs
+            requestorNamesPromise={requestorNamesPromise}
+            resultsNamesPromise={resultsNamesPromise}
           />
         </Suspense>
       </div>

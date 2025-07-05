@@ -13,7 +13,7 @@ import TableDesignContent from './TableDesignContent';
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { TestRunsData } from "@/utils/testRuns";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RESULTS_TABLE_COLUMNS, COLUMNS_IDS} from '@/utils/constants/common';
 
 interface TabConfig {
@@ -22,12 +22,11 @@ interface TabConfig {
 }
 
 interface TestRunsTabProps {
-  runsListPromise: Promise<TestRunsData>;
   requestorNamesPromise: Promise<string[]>;
   resultsNamesPromise: Promise<string[]>;
 }
 
-export default function TestRunsTabs({runsListPromise, requestorNamesPromise, resultsNamesPromise}: TestRunsTabProps) {
+export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromise}: TestRunsTabProps) {
   const translations = useTranslations("TestRunsTabs");
   const router = useRouter();
   const pathname = usePathname();
@@ -73,6 +72,12 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
   const [isInitialized, setIsInitialized] = useState(false);
   useEffect(() => {setIsInitialized(true);}, []);
 
+  const [runsData, setRunsData] = useState<TestRunsData | null>(null);
+  const [error, isError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const lastFetchedParamsRef = useRef<string | null>(null);
+
   // Define the tabs with their corresponding labels
   const TABS_CONFIG: TabConfig[] = [
     { id: TABS_IDS[0], label: translations('tabs.timeframe') },
@@ -95,12 +100,37 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
     params.set("columnsOrder", columnsOrderParam);
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [selectedVisibleColumns, columnsOrder, isInitialized, pathname, router, searchParams, selectedIndex]);
+  }, [selectedVisibleColumns, columnsOrder, isInitialized, pathname, router, selectedIndex]);
 
   const handleTabChange = (event: {selectedIndex : number}) => {
     const currentIndex = event.selectedIndex;
     setSelectedIndex(currentIndex);
   };
+
+  // Fetch the runs list when results tab is selected
+  useEffect(() => {
+    // If params are not changed, do not fetch again
+    if (selectedIndex === TABS_IDS.indexOf('results') 
+    ) {
+  console.log("Search params", searchParams);
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`/api/test-runs?${searchParams.toString()}`);
+          console.log("Response:", response);
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to fetch test runs');  
+          }
+
+          const data: TestRunsData = await response.json();
+          setRunsData(data);
+        } catch (error) {
+          console.error("Error fetching test runs:", error);
+        };
+      }
+      fetchData();
+    }
+  }, [selectedIndex, searchParams.toString()])
 
   return (
     <Tabs 
@@ -137,8 +167,9 @@ export default function TestRunsTabs({runsListPromise, requestorNamesPromise, re
         </TabPanel>
         <TabPanel>
           <div className={styles.tabContent}>
-            <TestRunsTable
-              runsListPromise={runsListPromise}
+           <TestRunsTable
+              runsList={runsData?.runs ?? []}
+              limitExceeded={runsData?.limitExceeded ?? false}
               visibleColumns={selectedVisibleColumns}
               orderedHeaders={columnsOrder}
             />

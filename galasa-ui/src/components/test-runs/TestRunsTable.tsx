@@ -89,12 +89,13 @@ const CustomCell = ({ header, value }: CustomCellProps) => {
 };
 
 interface TestRunsTableProps {
-  runsListPromise: Promise<TestRunsData>;
+  runsList: Run[];
+  limitExceeded: boolean;
   visibleColumns: string[];
   orderedHeaders?: { id: string; columnName: string }[];
 }
 
-export default function TestRunsTable({runsListPromise, visibleColumns, orderedHeaders}: TestRunsTableProps) {
+export default function TestRunsTable({runsList,limitExceeded, visibleColumns, orderedHeaders}: TestRunsTableProps) {
   const translations = useTranslations("TestRunsTable");
 
   const router = useRouter();
@@ -102,38 +103,16 @@ export default function TestRunsTable({runsListPromise, visibleColumns, orderedH
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [rawRuns, setRawRuns] = useState<Run[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [limitExceeded, setLimitExceeded] = useState(false);
 
   const headers = orderedHeaders?.filter(column => visibleColumns.includes(column.id)).map(column => ({
     key: column.id,
     header: translations(column.id)
   })) || [];
 
-  // Load the raw runs data from the promise
-  useEffect(() => {
-    const loadRuns = async () => {
-      setIsLoading(true);
-
-      try {
-        const {runs, limitExceeded } = await runsListPromise;
-        setRawRuns(runs || []);
-        setLimitExceeded(limitExceeded);
-      } catch (error) {
-        console.error("Error fetching test runs:", error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadRuns();
-  }, [runsListPromise]);
-
   // Transform the raw runs data into a format suitable for the DataTable
-  const tableRows = useMemo(() => transformRunsforTable(rawRuns), [rawRuns]);
+  const tableRows = useMemo(() => transformRunsforTable(runsList), [runsList]);
 
   // Calculate the paginated rows based on the current page and page size
   const paginatedRows = useMemo(() => {
@@ -144,12 +123,12 @@ export default function TestRunsTable({runsListPromise, visibleColumns, orderedH
 
   // Generate the time frame text based on the runs data
   const timeFrameText = useMemo(() => {
-    if (!rawRuns || rawRuns.length === 0) {
+    if (!runsList || runsList.length === 0) {
       return translations("noTestRunsFound");
     }
 
     let text = translations("timeFrameText.default");
-    const dates = rawRuns.map((run) =>
+    const dates = runsList.map((run) =>
       new Date(run.testStructure?.queued || 0).getTime(),
     );
     const earliestDate = new Date(Math.min(...dates));
@@ -162,7 +141,7 @@ export default function TestRunsTable({runsListPromise, visibleColumns, orderedH
       });
     }
     return text;
-  }, [rawRuns, translations]);
+  }, [runsList, translations]);
 
   if (isError) {
     return <ErrorPage />;
