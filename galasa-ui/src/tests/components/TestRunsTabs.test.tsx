@@ -7,6 +7,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import TestRunsTabs from '@/components/test-runs/TestRunsTabs';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 // Mock Child Components
 const TestRunsTableMock = jest.fn((props) => <div data-testid="test-runs-table">Mocked Test Runs Table</div>);
@@ -93,6 +94,14 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
+
+const queryClient = new QueryClient();
+
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+);
+
+
 describe('TestRunsTabs Component', () => {
   const mockPromise = Promise.resolve({ runs: [], limitExceeded: false });
   const mockRequestorNamesPromise = Promise.resolve([]);
@@ -108,10 +117,10 @@ describe('TestRunsTabs Component', () => {
   test('renders all tabs correctly', () => {
     render(
       <TestRunsTabs
-        runsListPromise={mockPromise}
         requestorNamesPromise={mockRequestorNamesPromise}
         resultsNamesPromise={mockResultsNamesPromise}
       />
+      , { wrapper }
     );
     const tabLabels = ['Timeframe', 'Table Design', 'Search Criteria', 'Results'];
     tabLabels.forEach(label => {
@@ -122,10 +131,9 @@ describe('TestRunsTabs Component', () => {
   test('displays the content of the Timeframe tab', () => {
     render(
       <TestRunsTabs
-        runsListPromise={mockPromise}
         requestorNamesPromise={mockRequestorNamesPromise}
         resultsNamesPromise={mockResultsNamesPromise}
-      />
+      />, {wrapper}
     );
     const timeframeTab = screen.getByRole('tab', { name: 'Timeframe' });
     fireEvent.click(timeframeTab);
@@ -137,10 +145,9 @@ describe('TestRunsTabs Component', () => {
   test('switches to the "Results" tab and displays its content on click', async () => {
     render(
       <TestRunsTabs
-        runsListPromise={mockPromise}
         requestorNamesPromise={mockRequestorNamesPromise}
         resultsNamesPromise={mockResultsNamesPromise}
-      />
+      />, {wrapper}
     );
     const resultsTab = screen.getByRole('tab', { name: 'Results' });
     fireEvent.click(resultsTab);
@@ -160,10 +167,9 @@ describe('TestRunsTabs Component', () => {
       // Act
       render(
         <TestRunsTabs
-          runsListPromise={mockPromise}
           requestorNamesPromise={mockRequestorNamesPromise}
           resultsNamesPromise={mockResultsNamesPromise}
-        />
+        />, { wrapper }
       );
   
       // Assert: Wait for the component to process the params and pass them as props
@@ -183,10 +189,9 @@ describe('TestRunsTabs Component', () => {
       // Act
       render(
         <TestRunsTabs
-          runsListPromise={mockPromise}
           requestorNamesPromise={mockRequestorNamesPromise}
           resultsNamesPromise={mockResultsNamesPromise}
-        />
+        /> , { wrapper }
       );
   
       // Assert: Wait for the initialization and save effect to run
@@ -208,10 +213,9 @@ describe('TestRunsTabs Component', () => {
       // Arrange
       render(
         <TestRunsTabs
-          runsListPromise={mockPromise}
           requestorNamesPromise={mockRequestorNamesPromise}
           resultsNamesPromise={mockResultsNamesPromise}
-        />
+        /> , { wrapper }
       );
 
       // Wait for the initial save
@@ -236,10 +240,9 @@ describe('TestRunsTabs Component', () => {
       // Arrange
       render(
         <TestRunsTabs
-          runsListPromise={mockPromise}
           requestorNamesPromise={mockRequestorNamesPromise}
           resultsNamesPromise={mockResultsNamesPromise}
-        />
+        /> , { wrapper }
       );
 
       // Wait for the initial save
