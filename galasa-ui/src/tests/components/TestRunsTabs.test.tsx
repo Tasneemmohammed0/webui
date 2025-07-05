@@ -8,6 +8,7 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import TestRunsTabs from '@/components/test-runs/TestRunsTabs';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { PARAMS } from '@/utils/constants/common';
 
 // Mock Child Components
 const TestRunsTableMock = jest.fn((props) => <div data-testid="test-runs-table">Mocked Test Runs Table</div>);
@@ -78,7 +79,22 @@ jest.mock('@/utils/constants/common', () => ({
     TEST_NAME: 'testName',
     STATUS: 'status',
     RESULT: 'result',
-  },
+  },  PARAMS: {
+    FROM: 'from',
+    TO: 'to',
+    RUN_NAME: 'runName',
+    REQUESTOR: 'requestor',
+    GROUP: 'group',
+    SUBMISSION_ID: 'submissionId',
+    BUNDLE: 'bundle',
+    TEST_NAME: 'testName',
+    RESULT: 'result',
+    STATUS: 'status',
+    TAGS: 'tags',
+    VISIBLE_COLUMNS: 'visibleColumns',
+    COLUMNS_ORDER: 'columnsOrder',
+    TAB: 'tab'
+  }
 }));
 
 // Mock window.matchMedia
@@ -354,7 +370,7 @@ describe('TestRunsTabs Component', () => {
 
       // Ensure no new fetch is triggered
       expect(global.fetch).toHaveBeenCalledTimes(1);
-    })
+    });
 
-  })
+  });
 });

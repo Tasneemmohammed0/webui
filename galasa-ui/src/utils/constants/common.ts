@@ -55,9 +55,26 @@ const RESULTS_TABLE_COLUMNS = [
   { id: "result", columnName: "Result" },
 ];
   
+const PARAMS = {
+  FROM: "from",
+  TO: "to",
+  RUN_NAME: "runName",
+  REQUESTOR: "requestor",
+  GROUP: "group",
+  BUNDLE: "bundle",
+  PACKAGE: "package",
+  TEST_NAME: "testName",
+  SUBMISSION_ID: "submissionId",
+  STATUS: "status",
+  RESULT: "result",
+  TAGS: "tags",
+  VISIBLE_COLUMNS: "visibleColumns",
+  COLUMNS_ORDER: "columnsOrder",
+  TAB: "tab"
+};
   
 const BATCH_SIZE = 100;
 
 export { CLIENT_API_VERSION,COLORS, MAX_RECORDS, MINUTE_MS, 
   HOUR_MS, DAY_MS, MAX_RANGE_MONTHS, TEST_RUNS_STATUS,
-  BATCH_SIZE, RESULTS_TABLE_COLUMNS, COLUMNS_IDS};
+  BATCH_SIZE, RESULTS_TABLE_COLUMNS, COLUMNS_IDS, PARAMS};

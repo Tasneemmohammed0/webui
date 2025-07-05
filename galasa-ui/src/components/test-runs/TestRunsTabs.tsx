@@ -14,7 +14,7 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { TestRunsData } from "@/utils/testRuns";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { RESULTS_TABLE_COLUMNS, COLUMNS_IDS} from '@/utils/constants/common';
+import { RESULTS_TABLE_COLUMNS, COLUMNS_IDS, PARAMS} from '@/utils/constants/common';
 import { useQuery } from '@tanstack/react-query';
 
 interface TabConfig {
@@ -44,7 +44,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
 
   // Initialize selectedVisibleColumns  based on URL parameters or default values
   const [selectedVisibleColumns, setSelectedVisibleColumns] = useState<string[]>(
-    () => searchParams.get('visibleColumns')?.split(',') || [
+    () => searchParams.get(PARAMS.VISIBLE_COLUMNS)?.split(',') || [
       COLUMNS_IDS.SUBMITTED_AT,
       COLUMNS_IDS.TEST_RUN_NAME,
       COLUMNS_IDS.REQUESTOR,
@@ -56,7 +56,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
 
   // Initialize columnsOrder based on URL parameters or default to RESULTS_TABLE_COLUMNS
   const [columnsOrder, setColumnsOrder] = useState<{ id: string; columnName: string }[]>(() => {
-    const orderParam = searchParams.get('columnsOrder');
+    const orderParam = searchParams.get(PARAMS.COLUMNS_ORDER);
     let correctOrder = RESULTS_TABLE_COLUMNS;
 
     // Parse the order from the URL parameter
@@ -90,9 +90,9 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     const columnsOrderParam = columnsOrder.map(col => col.id).join(",");
     
     const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", currentTab.id);
-    params.set("visibleColumns", visibleColumnsParam);
-    params.set("columnsOrder", columnsOrderParam);
+    params.set(PARAMS.TAB, currentTab.id);
+    params.set(PARAMS.VISIBLE_COLUMNS, visibleColumnsParam);
+    params.set(PARAMS.COLUMNS_ORDER, columnsOrderParam);
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [selectedVisibleColumns, columnsOrder, isInitialized, pathname, router, selectedIndex]);
@@ -106,21 +106,21 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
   const queryKey = useMemo(() => {
     // Parameters that actually affect the data fetch
     const relevantParameters = [
-      'from', 'to', 'runName', 'requestor', 'group',
-      'submissionId', 'bundle', 'testName', 'result', 'status', 'tags'
+      PARAMS.FROM, PARAMS.TO, PARAMS.RUN_NAME, PARAMS.REQUESTOR, PARAMS.GROUP,
+      PARAMS.SUBMISSION_ID, PARAMS.BUNDLE, PARAMS.TEST_NAME, PARAMS.RESULT, PARAMS.STATUS, PARAMS.STATUS
     ];
 
     // Create a new URLSearchParams object with the data that actually affects data fetch
-    const canonicalParams: Record<string, string> = {}
+    const canonicalParams: Record<string, string> = {};
     for (const key of relevantParameters) {
       if (searchParams.has(key)) {
         let value = searchParams.get(key) || '';
 
         // Normalize order-independent parameters
-        if (key === 'tags' ||
-            key === 'result' || 
-            key === 'status' || 
-            key === 'requestor') {
+        if (key === PARAMS.TAGS ||
+            key === PARAMS.RESULT || 
+            key === PARAMS.STATUS || 
+            key === PARAMS.REQUESTOR) {
           value = value?.split(',').sort().join(',');
         }
 
@@ -129,7 +129,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     }
     
     return ['testRuns', canonicalParams];
-  }, [searchParams])
+  }, [searchParams]);
 
   const {data: runsData, isLoading, isError } = useQuery<TestRunsData>({
     // Cache data based on search parameters
@@ -184,7 +184,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
         </TabPanel>
         <TabPanel>
           <div className={styles.tabContent}>
-           <TestRunsTable
+            <TestRunsTable
               runsList={runsData?.runs ?? []}
               limitExceeded={runsData?.limitExceeded ?? false}
               visibleColumns={selectedVisibleColumns}
