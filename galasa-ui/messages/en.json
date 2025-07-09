@@ -245,6 +245,7 @@
       "default": "Showing test runs submitted in the last 24 hours",
       "range": "Showing test runs submitted between {from} and {to}"
     },
+    "noColumnsSelected": "No columns selected – nothing to display. Please select one or more columns.",
     "pagination": {
       "backwardText": "Previous page",
       "forwardText": "Next page",

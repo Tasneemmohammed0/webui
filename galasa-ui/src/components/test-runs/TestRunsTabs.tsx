@@ -91,7 +91,12 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     
     const params = new URLSearchParams(searchParams.toString());
     params.set(RUN_QUERY_PARAMS.TAB, currentTab.id);
-    params.set(RUN_QUERY_PARAMS.VISIBLE_COLUMNS, visibleColumnsParam);
+    if(selectedVisibleColumns.length > 0) {
+      params.set(RUN_QUERY_PARAMS.VISIBLE_COLUMNS, visibleColumnsParam);
+    } else {
+      // If no columns are selected, we can clear the parameter
+      params.delete(RUN_QUERY_PARAMS.VISIBLE_COLUMNS);
+    }
     params.set(RUN_QUERY_PARAMS.COLUMNS_ORDER, columnsOrderParam);
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });

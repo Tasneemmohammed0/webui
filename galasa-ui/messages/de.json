@@ -245,6 +245,7 @@
       "default": "Zeige Testläufe der letzten 24 Stunden",
       "range": "Zeige Testläufe von {from} bis {to}"
     },
+    "noColumnsSelected": "Keine Spalten ausgewählt – nichts anzuzeigen. Bitte wählen Sie eine oder mehrere Spalten aus.",
     "pagination": {
       "backwardText": "Vorherige Seite",
       "forwardText": "Nächste Seite",
