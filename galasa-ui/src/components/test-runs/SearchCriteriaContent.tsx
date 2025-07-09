@@ -139,9 +139,13 @@ export default function SearchCriteriaContent({requestorNamesPromise, resultsNam
     setQuery(newQuery);
   
     // Synchronize the browser's URL with the new query
-    const params = new URLSearchParams();
-    newQuery.forEach((value, key) => {
-      params.set(key, value);
+    const params = new URLSearchParams(searchParams.toString());
+    filterableFields.forEach(field => {
+      if (newQuery.has(field.id)) {
+        params.set(field.id, newQuery.get(field.id)!);
+      } else {
+        params.delete(field.id);
+      }
     });
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
