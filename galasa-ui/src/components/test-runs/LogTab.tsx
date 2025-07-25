@@ -39,7 +39,12 @@ enum RegexFlags {
   AllMatchesIgnoreCase = "gi",
 }
 
-export default function LogTab({ logs }: { logs: string }) {
+interface LogTabProps {
+  logs: string;
+  initialLine?: number;
+}
+
+export default function LogTab({ logs, initialLine }: LogTabProps) {
   const translations = useTranslations("LogTab");
 
   const [logContent, setLogContent] = useState<string>("");
@@ -291,6 +296,7 @@ export default function LogTab({ logs }: { logs: string }) {
         return (
           <div
             key={logLine.lineNumber}
+            id={`log-line-${logLine.lineNumber}`}
             className={`${colorClass} ${styles.logEntry}`}
           >
             <span className={styles.lineNumberCol}>
@@ -304,6 +310,16 @@ export default function LogTab({ logs }: { logs: string }) {
 
     return result;
   };
+
+  // Effect to scroll to the initial line
+  useEffect(() => {
+    if (initialLine && processedLines.length > 0) {
+      const lineElement = document.getElementById(`log-line-${initialLine - 1}`);
+      if (lineElement) {
+        lineElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [initialLine, processedLines]);
 
   // Scroll to current match
   useEffect(() => {
@@ -333,7 +349,6 @@ export default function LogTab({ logs }: { logs: string }) {
 
   // Process log content and apply filters
   useEffect(() => {
-
     const processLogLines = (content: string) => {
       const lines = content.split("\n");
       const processed: LogLine[] = [];

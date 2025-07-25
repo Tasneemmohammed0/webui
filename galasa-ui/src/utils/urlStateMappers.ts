@@ -4,26 +4,26 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-import { RUN_QUERY_PARAMS, TABS_IDS, TEST_RUNS_STATUS } from "./constants/common";
+import { TEST_RUNS_QUERY_PARAMS, TABS_IDS, TEST_RUNS_STATUS } from "./constants/common";
 
 // Mappings for keys and values to minify the URL state
 const keyMap: Record<string, string> = {
-  [RUN_QUERY_PARAMS.TAB]: 't',
-  [RUN_QUERY_PARAMS.FROM]: 'f',
-  [RUN_QUERY_PARAMS.TO]: 'to',
-  [RUN_QUERY_PARAMS.RUN_NAME]: 'rn',
-  [RUN_QUERY_PARAMS.REQUESTOR]: 'r',
-  [RUN_QUERY_PARAMS.SUBMISSION_ID]: 'sid',
-  [RUN_QUERY_PARAMS.GROUP]: 'g',
-  [RUN_QUERY_PARAMS.BUNDLE]: 'b',
-  [RUN_QUERY_PARAMS.PACKAGE]: 'p',
-  [RUN_QUERY_PARAMS.TEST_NAME]: 'tn',
-  [RUN_QUERY_PARAMS.STATUS]: 's',
-  [RUN_QUERY_PARAMS.RESULT]: 'res',
-  [RUN_QUERY_PARAMS.TAGS]: 'tgs',
-  [RUN_QUERY_PARAMS.VISIBLE_COLUMNS]: 'vc',
-  [RUN_QUERY_PARAMS.COLUMNS_ORDER]: 'co',
-  [RUN_QUERY_PARAMS.SORT_ORDER]: 'so',
+  [TEST_RUNS_QUERY_PARAMS.TAB]: 't',
+  [TEST_RUNS_QUERY_PARAMS.FROM]: 'f',
+  [TEST_RUNS_QUERY_PARAMS.TO]: 'to',
+  [TEST_RUNS_QUERY_PARAMS.RUN_NAME]: 'rn',
+  [TEST_RUNS_QUERY_PARAMS.REQUESTOR]: 'r',
+  [TEST_RUNS_QUERY_PARAMS.SUBMISSION_ID]: 'sid',
+  [TEST_RUNS_QUERY_PARAMS.GROUP]: 'g',
+  [TEST_RUNS_QUERY_PARAMS.BUNDLE]: 'b',
+  [TEST_RUNS_QUERY_PARAMS.PACKAGE]: 'p',
+  [TEST_RUNS_QUERY_PARAMS.TEST_NAME]: 'tn',
+  [TEST_RUNS_QUERY_PARAMS.STATUS]: 's',
+  [TEST_RUNS_QUERY_PARAMS.RESULT]: 'res',
+  [TEST_RUNS_QUERY_PARAMS.TAGS]: 'tgs',
+  [TEST_RUNS_QUERY_PARAMS.VISIBLE_COLUMNS]: 'vc',
+  [TEST_RUNS_QUERY_PARAMS.COLUMNS_ORDER]: 'co',
+  [TEST_RUNS_QUERY_PARAMS.SORT_ORDER]: 'so',
 };
 
 const valueMap: Record<string, string> = {
@@ -81,18 +81,18 @@ const expandSortOrder = (minifiedSortString: string) => {
 // Transforms values based on their key
 const minifyValue = (key: string, value: string): string | number => {
   switch (key) {
-  case  RUN_QUERY_PARAMS.FROM:
-  case RUN_QUERY_PARAMS.TO:
+  case  TEST_RUNS_QUERY_PARAMS.FROM:
+  case TEST_RUNS_QUERY_PARAMS.TO:
     // Convert ISO date to a much shorter base-36 timestamp
     return new Date(value).getTime().toString(36);
-  case RUN_QUERY_PARAMS.VISIBLE_COLUMNS:
-  case RUN_QUERY_PARAMS.COLUMNS_ORDER:
-  case RUN_QUERY_PARAMS.STATUS:
-  case RUN_QUERY_PARAMS.RESULT:
+  case TEST_RUNS_QUERY_PARAMS.VISIBLE_COLUMNS:
+  case TEST_RUNS_QUERY_PARAMS.COLUMNS_ORDER:
+  case TEST_RUNS_QUERY_PARAMS.STATUS:
+  case TEST_RUNS_QUERY_PARAMS.RESULT:
     return minifyListValue(value);
-  case RUN_QUERY_PARAMS.TAB:
+  case TEST_RUNS_QUERY_PARAMS.TAB:
     return valueMap[value] || value;
-  case RUN_QUERY_PARAMS.SORT_ORDER:
+  case TEST_RUNS_QUERY_PARAMS.SORT_ORDER:
     return minifySortOrder(value);
   default:
     return value;
@@ -102,18 +102,18 @@ const minifyValue = (key: string, value: string): string | number => {
 // Retrieve values based on their key
 const expandValue = (key: string, value: string | number): string => {
   switch (key) {
-  case RUN_QUERY_PARAMS.FROM:
-  case RUN_QUERY_PARAMS.TO:
+  case TEST_RUNS_QUERY_PARAMS.FROM:
+  case TEST_RUNS_QUERY_PARAMS.TO:
     // Convert base-36 timestamp back to ISO string
     return new Date(parseInt(value.toString(), 36)).toISOString();
-  case RUN_QUERY_PARAMS.VISIBLE_COLUMNS:
-  case RUN_QUERY_PARAMS.COLUMNS_ORDER:
-  case RUN_QUERY_PARAMS.STATUS:
-  case RUN_QUERY_PARAMS.RESULT:
+  case TEST_RUNS_QUERY_PARAMS.VISIBLE_COLUMNS:
+  case TEST_RUNS_QUERY_PARAMS.COLUMNS_ORDER:
+  case TEST_RUNS_QUERY_PARAMS.STATUS:
+  case TEST_RUNS_QUERY_PARAMS.RESULT:
     return expandListValue(value.toString());
-  case RUN_QUERY_PARAMS.TAB:
+  case TEST_RUNS_QUERY_PARAMS.TAB:
     return reverseValueMap[value.toString()] || value.toString();
-  case RUN_QUERY_PARAMS.SORT_ORDER:
+  case TEST_RUNS_QUERY_PARAMS.SORT_ORDER:
     return expandSortOrder(value.toString());
   default:
     return value.toString();

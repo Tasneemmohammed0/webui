@@ -5,7 +5,9 @@
  */
 
 .titleContainer {
-
   margin-bottom: 1rem;
+}
 
+.clickableRow {
+  cursor: pointer;
 }

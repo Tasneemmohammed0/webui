@@ -14,7 +14,7 @@ import { Link } from "@carbon/react";
 import { Launch } from "@carbon/icons-react";
 import { getOneMonthAgo, getAWeekBeforeSubmittedTime } from "@/utils/timeOperations";
 import useHistoryBreadCrumbs from "@/hooks/useHistoryBreadCrumbs";
-import { RUN_QUERY_PARAMS } from "@/utils/constants/common";
+import { TEST_RUNS_QUERY_PARAMS } from "@/utils/constants/common";
 
 const OverviewTab = ({ metadata }: { metadata: RunMetadata }) => {
   const tags = metadata?.tags || [];
@@ -26,8 +26,8 @@ const OverviewTab = ({ metadata }: { metadata: RunMetadata }) => {
   const MONTH_AGO = getOneMonthAgo();
 
   const fullTestName = metadata?.package + "." + metadata?.testName;
-  const OTHER_RECENT_RUNS = `/test-runs?${RUN_QUERY_PARAMS.TEST_NAME}=${fullTestName}&${RUN_QUERY_PARAMS.BUNDLE}=${metadata?.bundle}&${RUN_QUERY_PARAMS.PACKAGE}=${metadata?.package}&${RUN_QUERY_PARAMS.FROM}=${MONTH_AGO}&${RUN_QUERY_PARAMS.TAB}=results`;
-  const RETRIES_FOR_THIS_TEST_RUN = `/test-runs?${RUN_QUERY_PARAMS.SUBMISSION_ID}=${metadata?.submissionId}&${RUN_QUERY_PARAMS.FROM}=${weekBefore}&${RUN_QUERY_PARAMS.TAB}=results`;
+  const OTHER_RECENT_RUNS = `/test-runs?${TEST_RUNS_QUERY_PARAMS.TEST_NAME}=${fullTestName}&${TEST_RUNS_QUERY_PARAMS.BUNDLE}=${metadata?.bundle}&${TEST_RUNS_QUERY_PARAMS.PACKAGE}=${metadata?.package}&${TEST_RUNS_QUERY_PARAMS.FROM}=${MONTH_AGO}&${TEST_RUNS_QUERY_PARAMS.TAB}=results`;
+  const RETRIES_FOR_THIS_TEST_RUN = `/test-runs?${TEST_RUNS_QUERY_PARAMS.SUBMISSION_ID}=${metadata?.submissionId}&${TEST_RUNS_QUERY_PARAMS.FROM}=${weekBefore}&${TEST_RUNS_QUERY_PARAMS.TAB}=results`;
   useEffect(() => {
 
     const validateTime = () => {

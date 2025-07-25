@@ -36,9 +36,15 @@ export interface MethodDetails {
   duration: string;
   status: string;
   result: string;
+  runLogStartLine: number;
 }
 
-function MethodsTab({ methods }: { methods: TestMethod[] }) {
+interface MethodsTabProps {
+  methods: TestMethod[];
+  onMethodClick: (method: MethodDetails) => void;
+}
+
+function MethodsTab({ methods, onMethodClick }: MethodsTabProps) {
   const translations = useTranslations("MethodsTab");
 
   const [methodDetails, setMethodDetails] = useState<MethodDetails[]>([]);
@@ -53,6 +59,7 @@ function MethodsTab({ methods }: { methods: TestMethod[] }) {
         duration: getIsoTimeDifference(method.startTime!, method.endTime!),
         status: method.status || "",
         result: method.result || "",
+        runLogStartLine: method.runLogStart || 0,
       };
 
       methodDetails.push(methodDetail);
@@ -133,7 +140,12 @@ function MethodsTab({ methods }: { methods: TestMethod[] }) {
               <TableBody>
                 {rows.map((row) => {
                   return (
-                    <TableRow key={row.id} {...getRowProps({ row })}>
+                    <TableRow 
+                      key={row.id} 
+                      onClick={() => onMethodClick(methodDetails[parseInt(row.id)])} 
+                      className={styles.clickableRow}
+                      {...getRowProps({ row })}
+                    >
                       {/* Method name */}
                       <TableCell key={row.cells[0].id}>
                         <p>{row.cells[0].value}</p>

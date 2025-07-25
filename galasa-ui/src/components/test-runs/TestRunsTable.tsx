@@ -81,19 +81,25 @@ export default function TestRunsTable({runsList,limitExceeded, visibleColumns, o
     if (!runsList || runsList.length === 0) {
       return translations("noTestRunsFound");
     }
-
+      
     let text = translations("timeFrameText.default");
-    const dates = runsList.map((run) =>
-      new Date(run.submittedAt || 0).getTime(),
-    );
-    const earliestDate = new Date(Math.min(...dates));
-    const latestDate = new Date(Math.max(...dates));
 
-    if (earliestDate && latestDate) {
-      text = translations('timeFrameText.range', {
-        from: formatDate(earliestDate),
-        to: formatDate(latestDate)
-      });
+    // Filter out any runs that don't have a valid `submittedAt` date
+    const runsWithDates = runsList.filter(run => run.submittedAt);
+  
+    if (runsWithDates.length !== 0) {
+      const dates = runsWithDates.map((run) =>
+        new Date(run.submittedAt).getTime(),
+      );
+      const earliestDate = new Date(Math.min(...dates));
+      const latestDate = new Date(Math.max(...dates));
+
+      if (earliestDate && latestDate) {
+        text = translations('timeFrameText.range', {
+          from: formatDate(earliestDate),
+          to: formatDate(latestDate)
+        });
+      }
     }
     return text;
   }, [runsList, translations, formatDate]);

@@ -13,11 +13,15 @@
 }
 
 .logContainer {
-  margin: 1rem 0;
+  position: sticky;
+  top: 45px;
+  z-index: 10;
+  background: var(--cds-background, white);
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  
 }
 
 .searchContainer {

@@ -60,9 +60,7 @@ export function getIsoTimeDifference(startTime: string, endTime: string): string
 
   // If either parse failed, produce an error message
   if (isNaN(dt1.getTime()) || isNaN(dt2.getTime())) {
-
-    result = "Invalid date";
-
+    result = "N/A";
   } else {
 
     const startedAt = Date.parse(startTime);

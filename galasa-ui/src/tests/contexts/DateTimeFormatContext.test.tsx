@@ -192,4 +192,16 @@ describe('DateTimeFormatContext', () => {
 
     expect(screen.getByText(/Formatted Date:/)).toHaveTextContent(/01\/10\/2023.*\d{2}:\d{2}:\d{2}/);
   });
+
+  test('returns an empty text on invalid date', () => {
+    const invalidDate = new Date('invalid-date-string');
+    
+    render(
+      <DateTimeFormatProvider>
+        <TestComponent date={invalidDate} />
+      </DateTimeFormatProvider>
+    );
+
+    expect(screen.getByText(/Formatted Date:/)).toHaveTextContent('-');
+  });
 });

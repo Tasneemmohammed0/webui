@@ -8,6 +8,8 @@ import { render, screen, act, fireEvent, waitFor } from '@testing-library/react'
 import TestRunDetails from '@/components/test-runs/TestRunDetails';
 import { downloadArtifactFromServer } from '@/actions/runsAction';
 import { cleanArtifactPath, handleDownload } from '@/utils/artifacts';
+import { TEST_RUN_PAGE_TABS } from '@/utils/constants/common';
+
 
 function setup<T>() {
   let resolve!: (value: T) => void;
@@ -19,9 +21,18 @@ function setup<T>() {
   return { promise, resolve, reject };
 }
 
+let mockRouter: { replace: jest.Mock };
+
+jest.mock('next/navigation', () => ({
+  // The key is to return the mockRouter variable directly.
+  useRouter: () => mockRouter,
+  usePathname: jest.fn(() => '/test-runs/some-run-id'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+}));
+
 jest.mock('@/actions/runsAction');
 
-// Mocking next-intl
+// Mock next-intl
 jest.mock('next-intl', () => ({
   useTranslations: () => (key: string, opts?: any) =>
     opts?.runName ? `title:${opts.runName}` : key,
@@ -77,8 +88,16 @@ jest.mock('@/components/test-runs/OverviewTab', () => {
 });
 
 jest.mock('@/components/test-runs/MethodsTab', () => {
-  const MethodsTab = ({ methods }: any) => (
-    <div>MethodsTab count={methods?.length}</div>
+  const MethodsTab = ({ methods, onMethodClick }: any) => (
+    <div>
+      <p>MethodsTab count={methods?.length}</p>
+      <button
+        data-testid="mock-method-button"
+        onClick={() => onMethodClick({runLogStartLine: 123})}
+      >
+        Clickable Mock Method
+      </button>
+    </div>
   );
   MethodsTab.displayName = 'MethodsTab';
   return {
@@ -140,8 +159,29 @@ jest.mock('@/components/common/StatusIndicator', () => {
 
 // Carbon React mocks
 jest.mock('@carbon/react', () => {
-  const Tab = ({ children }: any) => <div>{children}</div>;
-  const Tabs = ({ children }: any) => <div>{children}</div>;
+  let onTabsChange: (event: { selectedIndex: number }) => void;
+  const Tabs = ({ children, onChange }: any) => {
+    onTabsChange = onChange;
+    return <div>{children}</div>;
+  };
+  const Tab = ({ children, renderIcon }: any) => {
+    const tabText = children;
+    const tabIndex = ['tabs.overview', 'tabs.methods', 'tabs.runLog', 'tabs.artifacts'].indexOf(tabText);
+    
+    const Icon = renderIcon;
+
+    return (
+      <button
+        // When this button is clicked, call the stored onChange handler
+        onClick={() => onTabsChange({ selectedIndex: tabIndex })}
+        // Use the text to make it findable in the test
+        role="tab"
+      >
+        {Icon && <Icon />}
+        {tabText}
+      </button>
+    );
+  };
   const TabList = ({ children }: any) => <div>{children}</div>;
   const TabPanels = ({ children }: any) => <div>{children}</div>;
   const TabPanel = ({ children }: any) => <div>{children}</div>;
@@ -181,11 +221,6 @@ beforeAll(() => {
   });
 });
 
-// Mock for 'next/navigation'
-jest.mock('next/navigation', () => ({
-  usePathname: jest.fn(() => '/mock/path/run-123'), // Return a mock path
-  useSearchParams: jest.fn(() => new URLSearchParams('from=test&tab=overview')), // Return a real URLSearchParams instance
-}));
 
 jest.mock('@/utils/artifacts', () => ({
   handleDownload: jest.fn(),
@@ -202,6 +237,10 @@ describe('TestRunDetails', () => {
   const runId = 'run-123';
 
   beforeEach(() => {
+    mockRouter = {
+      replace: jest.fn(),
+    };
+
     jest.clearAllMocks();
 
     mockDownloadArtifactFromServer.mockClear();
@@ -474,4 +513,121 @@ describe('TestRunDetails', () => {
       });
     });
   });
+
+  describe('URL handling', () => {
+    const mockTestStructure = {
+      methods: [],
+      result: 'PASS',
+      status: 'OK',
+      runName: 'TestRun',
+      testShortName: 'Test',
+      bundle: 'Bundle',
+      submissionId: 'Submission',
+      group: 'Group',
+      requestor: 'Requestor',
+      queued: '2025-01-01T00:00:00Z',
+      startTime: '2025-01-01T00:00:00Z',
+      endTime: '2025-01-01T01:00:00Z',
+      tags: [],
+    };
+
+    test('updates URL with the current tab', async () => {
+      const runDetailsDeferred = setup<any>();
+      const runArtifactsDeferred = setup<any[]>();
+      const runLogDeferred = setup<string>();
+
+      render(
+        <TestRunDetails
+          runId={runId}
+          runDetailsPromise={runDetailsDeferred.promise}
+          runArtifactsPromise={runArtifactsDeferred.promise}
+          runLogPromise={runLogDeferred.promise}
+        />
+      );
+
+      // Resolve promises to load the component's data
+      await act(async () => {
+        runDetailsDeferred.resolve({
+          testStructure: mockTestStructure,
+        });
+        runArtifactsDeferred.resolve([{ path: '/logs/debug.log' }]);
+        runLogDeferred.resolve('Log content');
+      });
+
+      await screen.findByText('title:TestRun');
+
+      // Click on the "Methods" tab
+      const methodsTabButton = screen.getByRole('tab', { name: 'tabs.methods' });
+      fireEvent.click(methodsTabButton);
+
+      // Check that the router has been called correctly
+      expect(mockRouter.replace).toHaveBeenCalledTimes(1);
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        `/test-runs/some-run-id?tab=methods`, {scroll: false}
+      );
+
+      // Click on the "Artifacts" tab
+      const artifactsTabButton = screen.getByRole('tab', { name: 'tabs.artifacts' });
+      fireEvent.click(artifactsTabButton);
+
+      // Check that the router has been called correctly
+      expect(mockRouter.replace).toHaveBeenCalledTimes(2);
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        '/test-runs/some-run-id?tab=artifacts', { scroll: false }
+      );
+    });
+
+    test('navigates to the log tab with the correct line number when a method is clicked', async () => {
+      const runDetailsDeferred = setup<any>();
+      const runArtifactsDeferred = setup<any[]>();
+      const runLogDeferred = setup<string>();
+
+      render(
+        <TestRunDetails
+          runId={runId}
+          runDetailsPromise={runDetailsDeferred.promise}
+          runArtifactsPromise={runArtifactsDeferred.promise}
+          runLogPromise={runLogDeferred.promise}
+        />
+      );
+
+      // Resolve promises to load the component's data
+      await act(async () => {
+        runDetailsDeferred.resolve({
+          testStructure: mockTestStructure,
+        });
+        runArtifactsDeferred.resolve([{ path: '/logs/debug.log' }]);
+        runLogDeferred.resolve('Log content');
+      });
+      await screen.findByText('title:TestRun');
+
+      // Navigate to the methods tab
+      const methodsTabButton = screen.getByRole('tab', { name: 'tabs.methods' });
+      fireEvent.click(methodsTabButton);
+
+      // Find and click the specific mock button inside our mocked MethodsTab
+      const mockMethod = screen.getByTestId('mock-method-button');
+      fireEvent.click(mockMethod);
+
+      // Assert that the router was called with the correct URL
+      const logTabIndex = TEST_RUN_PAGE_TABS.indexOf('runLog');
+      const expectedTabParam = `tab=${TEST_RUN_PAGE_TABS[logTabIndex]}`;
+      const expectedLineParam = `line=123`;
+
+      expect(mockRouter.replace).toHaveBeenCalledTimes(2); // 1st for tab change, 2nd for method click
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expect.stringContaining(expectedTabParam),
+        { scroll: false }
+      );
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expect.stringContaining(expectedLineParam),
+        { scroll: false }
+      );
+
+      const expectedUrl = `/test-runs/some-run-id?${expectedTabParam}&${expectedLineParam}`;
+      expect(mockRouter.replace).toHaveBeenLastCalledWith(expectedUrl, { scroll: false });
+
+    });
+  });
+
 });

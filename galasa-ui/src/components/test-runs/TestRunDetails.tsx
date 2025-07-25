@@ -6,15 +6,15 @@
 "use client";
 import BreadCrumb from '@/components/common/BreadCrumb';
 import { Tab, Tabs, TabList, TabPanels, TabPanel, Loading } from '@carbon/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from "@/styles/TestRun.module.css";
 import { Dashboard, Code, CloudLogging, RepoArtifact, Share, CloudDownload } from '@carbon/icons-react';
 import OverviewTab from './OverviewTab';
 import { ArtifactIndexEntry, Run, TestMethod } from '@/generated/galasaapi';
 import ErrorPage from '@/app/error/page';
 import { RunMetadata } from '@/utils/interfaces';
-import { getIsoTimeDifference, parseIsoDateTime } from '@/utils/timeOperations';
-import MethodsTab from './MethodsTab';
+import { getIsoTimeDifference } from '@/utils/timeOperations';
+import MethodsTab, { MethodDetails } from './MethodsTab';
 import { ArtifactsTab } from './ArtifactsTab';
 import LogTab from './LogTab';
 import TestRunSkeleton from './TestRunSkeleton';
@@ -26,6 +26,8 @@ import { handleDownload } from '@/utils/artifacts';
 import { InlineNotification } from '@carbon/react';
 import { Button } from '@carbon/react';
 import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {SINGLE_RUN_QUERY_PARAMS, TEST_RUN_PAGE_TABS} from '@/utils/constants/common';
 
 interface TestRunDetailsProps {
   runId: string;
@@ -34,13 +36,13 @@ interface TestRunDetailsProps {
   runArtifactsPromise: Promise<ArtifactIndexEntry[]>;
 }
 
-type DownloadResult = { contentType: string; data: string; size: number; base64: string; };
-
-
 // Type the props directly on the function's parameter
 const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsPromise }: TestRunDetailsProps) => {
   const translations = useTranslations("TestRunDetails");
   const {breadCrumbItems } = useHistoryBreadCrumbs();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const [run, setRun] = useState<RunMetadata>();
   const [methods, setMethods] = useState<TestMethod[]>([]);
@@ -52,10 +54,13 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
   const [copied, setCopied] = useState(false);
   const [notificationError, setNotificationError] = useState<string | null>(null);
   const { formatDate } = useDateTimeFormat();
-  
+
+  // Get the selected tab index from the URL or default to the first tab
+  const [selectedTabIndex, setSelectedTabIndex] = useState(searchParams.get('tab') ? 
+    TEST_RUN_PAGE_TABS.indexOf(searchParams.get(SINGLE_RUN_QUERY_PARAMS.TAB)!) : 0);
+
   const extractRunDetails = useCallback((runDetails: Run) => {
     setMethods(runDetails.testStructure?.methods || []);
-
     // Build run metadata object
     const runMetadata: RunMetadata = {
       runId: runId,
@@ -69,10 +74,10 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
       package: runDetails.testStructure?.testName?.substring(0, runDetails.testStructure?.testName.lastIndexOf('.')) || 'N/A',
       requestor: runDetails.testStructure?.requestor!,
       rawSubmittedAt: runDetails.testStructure?.queued,
-      submitted: formatDate(new Date(runDetails.testStructure?.queued!)),
-      startedAt: formatDate(new Date(runDetails.testStructure?.startTime!)),
-      finishedAt: formatDate(new Date(runDetails.testStructure?.endTime!)),
-      duration: getIsoTimeDifference(runDetails.testStructure?.startTime!, runDetails.testStructure?.endTime!),
+      submitted: runDetails.testStructure?.queued ? formatDate(new Date(runDetails.testStructure?.queued!)) : '-',
+      startedAt: runDetails.testStructure?.startTime ? formatDate(new Date(runDetails.testStructure?.startTime!)) : '-',
+      finishedAt: runDetails.testStructure?.endTime ? formatDate(new Date(runDetails.testStructure?.endTime)) : '-',
+      duration: (runDetails.testStructure?.startTime && runDetails.testStructure?.endTime) ? getIsoTimeDifference(runDetails.testStructure?.startTime, runDetails.testStructure?.endTime) : '-',
       tags: runDetails.testStructure?.tags!
     };
 
@@ -80,6 +85,8 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
   },[runId, formatDate]);
 
   useEffect(() => {
+    // If run details are already loaded, skip fetching
+    if(run) return;
     const loadRunDetails = async () => {
       setIsLoading(true);
 
@@ -101,11 +108,7 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
     };
 
     loadRunDetails();
-  }, [runDetailsPromise, runArtifactsPromise, runLogPromise, extractRunDetails]);
-
-  if (isError) {
-    return <ErrorPage />;
-  }
+  }, [run, runDetailsPromise, runArtifactsPromise, runLogPromise, extractRunDetails]);
 
   const handleShare = async () => {
     try {
@@ -154,7 +157,46 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
       setIsDownloading(false);
     }
   };
-  
+
+  const updateUrl = (params: URLSearchParams) => {
+    const newUrl = `${pathname}?${params.toString()}`;
+    router.replace(newUrl, { scroll: false });
+  };
+
+  const handleTabChange = (event: {selectedIndex : number}) => {
+    const newIndex = event.selectedIndex;
+    setSelectedTabIndex(newIndex);
+    
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(SINGLE_RUN_QUERY_PARAMS.TAB, TEST_RUN_PAGE_TABS[newIndex]);
+    // When switching away from the log tab, remove the line parameter
+    if (TEST_RUN_PAGE_TABS[newIndex] !== 'runLog') {
+      params.delete(SINGLE_RUN_QUERY_PARAMS.LOG_LINE);
+    }
+
+    updateUrl(params);
+  };
+
+  // Handle method click to navigate to the log tab with the correct line number
+  const handleNavigateToLog = (method: MethodDetails) => {
+    const logTabIndex = TEST_RUN_PAGE_TABS.indexOf('runLog');
+    setSelectedTabIndex(logTabIndex);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(SINGLE_RUN_QUERY_PARAMS.TAB, TEST_RUN_PAGE_TABS[logTabIndex]);
+    params.set(SINGLE_RUN_QUERY_PARAMS.LOG_LINE, method.runLogStartLine.toString());
+    updateUrl(params);
+  };
+
+  // Read line param for LogTab from URL
+  const initialLine = useMemo(() => {
+    const lineParam = searchParams.get(SINGLE_RUN_QUERY_PARAMS.LOG_LINE);
+    return lineParam ? parseInt(lineParam, 10) : 0;
+  }, [searchParams]);
+
+  if (isError) {
+    return <ErrorPage />;
+  }
 
   return (
     <main id="content">
@@ -207,7 +249,10 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
               {translations("test")}: {run?.testName}
             </span>
           </div>
-          <Tabs>
+          <Tabs
+            selectedIndex={selectedTabIndex}
+            onChange={handleTabChange}
+          >
             <TabList iconSize="lg" className={styles.tabs}>
               <Tab renderIcon={Dashboard} href="#">
                 {translations("tabs.overview")}
@@ -227,10 +272,16 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
                 <OverviewTab metadata={run!} />
               </TabPanel>
               <TabPanel>
-                <MethodsTab methods={methods} />
+                <MethodsTab 
+                  methods={methods} 
+                  onMethodClick={handleNavigateToLog}
+                />
               </TabPanel>
               <TabPanel>
-                <LogTab logs={logs} />
+                <LogTab 
+                  logs={logs} 
+                  initialLine={initialLine}
+                />
               </TabPanel>
               <TabPanel>
                 <ArtifactsTab

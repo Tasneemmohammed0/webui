@@ -15,7 +15,7 @@ import {
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import CustomSearchComponent from "./CustomSearchComponent";
 import CustomCheckBoxList from "./CustomCheckBoxList";
-import {RUN_QUERY_PARAMS, TEST_RUNS_STATUS} from "@/utils/constants/common";
+import {TEST_RUNS_QUERY_PARAMS, TEST_RUNS_STATUS} from "@/utils/constants/common";
 import CustomTagsComponent from "./CustomTagsComponent";
 import { useTranslations } from "next-intl";
 import { Button } from "@carbon/react";
@@ -45,15 +45,15 @@ export default function SearchCriteriaContent({
   const translations = useTranslations("SearchCriteriaContent");
 
   const filterableFields: FilterableField[] = [
-    {id: RUN_QUERY_PARAMS.RUN_NAME, label: translations("fields.runName.label"), placeHolder: 'any', description: translations("fields.runName.description")},
-    {id: RUN_QUERY_PARAMS.REQUESTOR, label: translations("fields.requestor.label"), placeHolder: 'any', description: translations("fields.requestor.description")},
-    {id: RUN_QUERY_PARAMS.GROUP, label: translations("fields.group.label"), placeHolder: 'any', description: translations("fields.group.description")},
-    {id: RUN_QUERY_PARAMS.BUNDLE, label: translations("fields.bundle.label"), placeHolder: 'any', description: translations("fields.bundle.description")},
-    {id: RUN_QUERY_PARAMS.SUBMISSION_ID, label: translations("fields.submissionId.label"), placeHolder: 'any', description: translations("fields.submissionId.description")},
-    {id: RUN_QUERY_PARAMS.TEST_NAME, label: translations("fields.testName.label"), placeHolder: 'any', description: translations("fields.testName.description")},
-    {id: RUN_QUERY_PARAMS.STATUS, label: translations("fields.status.label"), placeHolder: 'any', description: translations("fields.status.description")},
-    {id: RUN_QUERY_PARAMS.TAGS, label: translations("fields.tags.label"), placeHolder: 'any', description: translations("fields.tags.description")},
-    {id: RUN_QUERY_PARAMS.RESULT, label: translations("fields.result.label"), placeHolder: 'any', description: translations("fields.result.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.RUN_NAME, label: translations("fields.runName.label"), placeHolder: 'any', description: translations("fields.runName.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.REQUESTOR, label: translations("fields.requestor.label"), placeHolder: 'any', description: translations("fields.requestor.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.GROUP, label: translations("fields.group.label"), placeHolder: 'any', description: translations("fields.group.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.BUNDLE, label: translations("fields.bundle.label"), placeHolder: 'any', description: translations("fields.bundle.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.SUBMISSION_ID, label: translations("fields.submissionId.label"), placeHolder: 'any', description: translations("fields.submissionId.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.TEST_NAME, label: translations("fields.testName.label"), placeHolder: 'any', description: translations("fields.testName.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.STATUS, label: translations("fields.status.label"), placeHolder: 'any', description: translations("fields.status.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.TAGS, label: translations("fields.tags.label"), placeHolder: 'any', description: translations("fields.tags.description")},
+    {id: TEST_RUNS_QUERY_PARAMS.RESULT, label: translations("fields.result.label"), placeHolder: 'any', description: translations("fields.result.description")},
   ];
 
   // Local state for the UI of the "currently selected" filter editor
@@ -102,11 +102,11 @@ export default function SearchCriteriaContent({
     setCurrentInputValue(savedValue);
 
     const splitSavedValue = savedValue ? savedValue.split(',') : [];
-    if (fieldId === RUN_QUERY_PARAMS.RESULT) {
+    if (fieldId === TEST_RUNS_QUERY_PARAMS.RESULT) {
       setSelectedResults(splitSavedValue);
-    } else if (fieldId === RUN_QUERY_PARAMS.STATUS) {
+    } else if (fieldId === TEST_RUNS_QUERY_PARAMS.STATUS) {
       setSelectedStatuses(splitSavedValue);
-    } else if (fieldId === RUN_QUERY_PARAMS.TAGS) {
+    } else if (fieldId === TEST_RUNS_QUERY_PARAMS.TAGS) {
       setSelectedTags(splitSavedValue);
     }
   }, [searchCriteria]);
@@ -121,11 +121,11 @@ export default function SearchCriteriaContent({
 
     // Determine the new value for the currently selected filter
     let valueToSet = '';
-    if (selectedFilterId === RUN_QUERY_PARAMS.RESULT) {
+    if (selectedFilterId === TEST_RUNS_QUERY_PARAMS.RESULT) {
       valueToSet = selectedResults.join(',');
-    } else if (selectedFilterId === RUN_QUERY_PARAMS.STATUS) {
+    } else if (selectedFilterId === TEST_RUNS_QUERY_PARAMS.STATUS) {
       valueToSet = selectedStatuses.join(',');
-    } else if (selectedFilterId === RUN_QUERY_PARAMS.TAGS) {
+    } else if (selectedFilterId === TEST_RUNS_QUERY_PARAMS.TAGS) {
       valueToSet = selectedTags.join(',');
     } else {
       valueToSet = currentInputValue.trim();
@@ -227,9 +227,9 @@ export default function SearchCriteriaContent({
     // Props for the checkbox list component
     const checkboxProps = {
       title: field.description,
-      items: (field.id === RUN_QUERY_PARAMS.RESULT) ? resultsNames : Object.values(TEST_RUNS_STATUS),
-      selectedItems: (field.id === RUN_QUERY_PARAMS.RESULT) ? selectedResults : selectedStatuses,
-      onChange: (field.id === RUN_QUERY_PARAMS.RESULT) ? setSelectedResults : setSelectedStatuses, 
+      items: (field.id === TEST_RUNS_QUERY_PARAMS.RESULT) ? resultsNames : Object.values(TEST_RUNS_STATUS),
+      selectedItems: (field.id === TEST_RUNS_QUERY_PARAMS.RESULT) ? selectedResults : selectedStatuses,
+      onChange: (field.id === TEST_RUNS_QUERY_PARAMS.RESULT) ? setSelectedResults : setSelectedStatuses, 
       onSubmit: handleSave,
       onCancel: handleCancel,
       disableSaveAndReset: isSaveAndResetDisabled,
@@ -247,15 +247,15 @@ export default function SearchCriteriaContent({
 
     let customComponent;
     switch (field.id) {
-    case RUN_QUERY_PARAMS.REQUESTOR:
+    case TEST_RUNS_QUERY_PARAMS.REQUESTOR:
       customComponent = <CustomSearchComponent {...searchProps}
         allRequestors={allRequestors} />;
       break;
-    case RUN_QUERY_PARAMS.RESULT:
-    case RUN_QUERY_PARAMS.STATUS:
+    case TEST_RUNS_QUERY_PARAMS.RESULT:
+    case TEST_RUNS_QUERY_PARAMS.STATUS:
       customComponent = <CustomCheckBoxList {...checkboxProps} />;
       break;
-    case RUN_QUERY_PARAMS.TAGS:
+    case TEST_RUNS_QUERY_PARAMS.TAGS:
       customComponent = <CustomTagsComponent {...tagsProps} />;
       break;
     default:

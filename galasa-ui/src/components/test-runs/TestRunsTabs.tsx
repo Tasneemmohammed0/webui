@@ -14,7 +14,7 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { TestRunsData } from "@/utils/testRuns";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from 'react';
-import { RESULTS_TABLE_COLUMNS, COLUMNS_IDS, RUN_QUERY_PARAMS, DAY_MS, TABS_IDS, SEARCH_CRITERIA_KEYS, DEFAULT_VISIBLE_COLUMNS} from '@/utils/constants/common';
+import { RESULTS_TABLE_COLUMNS, COLUMNS_IDS, TEST_RUNS_QUERY_PARAMS, DAY_MS, TABS_IDS, SEARCH_CRITERIA_KEYS, DEFAULT_VISIBLE_COLUMNS} from '@/utils/constants/common';
 import { useQuery } from '@tanstack/react-query';
 import { decodeStateFromUrlParam, encodeStateToUrlParam } from '@/utils/urlEncoder';
 import { TimeFrameValues } from '@/utils/interfaces';
@@ -59,12 +59,12 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
 
   // Initialize selectedVisibleColumns  based on URL parameters or default values
   const [selectedVisibleColumns, setSelectedVisibleColumns] = useState<string[]>(
-    () => searchParams.get(RUN_QUERY_PARAMS.VISIBLE_COLUMNS)?.split(',') || DEFAULT_VISIBLE_COLUMNS
+    () => searchParams.get(TEST_RUNS_QUERY_PARAMS.VISIBLE_COLUMNS)?.split(',') || DEFAULT_VISIBLE_COLUMNS
   );
 
   // Initialize columnsOrder based on URL parameters or default to RESULTS_TABLE_COLUMNS
   const [columnsOrder, setColumnsOrder] = useState<ColumnDefinition[]>(() => {
-    const orderParam = searchParams.get(RUN_QUERY_PARAMS.COLUMNS_ORDER);
+    const orderParam = searchParams.get(TEST_RUNS_QUERY_PARAMS.COLUMNS_ORDER);
     let correctOrder: ColumnDefinition[] = RESULTS_TABLE_COLUMNS;
 
     // Parse the order from the URL parameter
@@ -100,7 +100,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
   // Initialize sortOrder based on URL parameters or default to an empty array
   // URL should look like this sortOrder?result:asc,status:desc
   const [sortOrder, setSortOrder] = useState<{id: string; order: sortOrderType}[]>(() => {
-    const sortOrderParam = searchParams.get(RUN_QUERY_PARAMS.SORT_ORDER);
+    const sortOrderParam = searchParams.get(TEST_RUNS_QUERY_PARAMS.SORT_ORDER);
     let sortOrderArray: {id: string; order: sortOrderType}[] = [];
     if (sortOrderParam) {
       sortOrderArray = sortOrderParam.split(',').map((item) => {
@@ -131,26 +131,26 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     const params = new URLSearchParams();
 
     // Tab
-    params.set(RUN_QUERY_PARAMS.TAB, TABS_CONFIG[selectedIndex].id);
+    params.set(TEST_RUNS_QUERY_PARAMS.TAB, TABS_CONFIG[selectedIndex].id);
 
     // Table Design
     if(selectedVisibleColumns.length > 0) {
-      params.set(RUN_QUERY_PARAMS.VISIBLE_COLUMNS, selectedVisibleColumns.join(","));
+      params.set(TEST_RUNS_QUERY_PARAMS.VISIBLE_COLUMNS, selectedVisibleColumns.join(","));
     } else {
       // If no columns are selected, we can clear the parameter
-      params.delete(RUN_QUERY_PARAMS.VISIBLE_COLUMNS);
+      params.delete(TEST_RUNS_QUERY_PARAMS.VISIBLE_COLUMNS);
     }
     if (sortOrder.length > 0) {
-      params.set(RUN_QUERY_PARAMS.SORT_ORDER, sortOrder.map(item => `${item.id}:${item.order}`).join(","));
+      params.set(TEST_RUNS_QUERY_PARAMS.SORT_ORDER, sortOrder.map(item => `${item.id}:${item.order}`).join(","));
     } else {
-      params.delete(RUN_QUERY_PARAMS.SORT_ORDER);
+      params.delete(TEST_RUNS_QUERY_PARAMS.SORT_ORDER);
     }
     
-    params.set(RUN_QUERY_PARAMS.COLUMNS_ORDER, columnsOrder.map(col => col.id).join(","));
+    params.set(TEST_RUNS_QUERY_PARAMS.COLUMNS_ORDER, columnsOrder.map(col => col.id).join(","));
 
     // Timeframe
-    params.set(RUN_QUERY_PARAMS.FROM, timeframeValues.fromDate.toISOString());
-    params.set(RUN_QUERY_PARAMS.TO, timeframeValues.toDate.toISOString());
+    params.set(TEST_RUNS_QUERY_PARAMS.FROM, timeframeValues.fromDate.toISOString());
+    params.set(TEST_RUNS_QUERY_PARAMS.TO, timeframeValues.toDate.toISOString());
 
     // Search Criteria
     Object.entries(searchCriteria).forEach(([key, value]) => {
@@ -187,7 +187,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
       const structure = run.testStructure || {};
       return {
         id: run.runId,
-        submittedAt: structure.queued ? structure.queued : 'N/A',
+        submittedAt: structure.queued || '-',
         runName: structure.runName || 'N/A',
         requestor: structure.requestor || 'N/A',
         group: structure.group || 'N/A',
@@ -212,8 +212,8 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
   const queryKey = useMemo(() => {
     // Parameters that actually affect the data fetch
     const relevantParameters = [
-      RUN_QUERY_PARAMS.FROM, RUN_QUERY_PARAMS.TO, RUN_QUERY_PARAMS.RUN_NAME, RUN_QUERY_PARAMS.REQUESTOR, RUN_QUERY_PARAMS.GROUP,
-      RUN_QUERY_PARAMS.SUBMISSION_ID, RUN_QUERY_PARAMS.BUNDLE, RUN_QUERY_PARAMS.TEST_NAME, RUN_QUERY_PARAMS.RESULT, RUN_QUERY_PARAMS.STATUS, RUN_QUERY_PARAMS.TAGS
+      TEST_RUNS_QUERY_PARAMS.FROM, TEST_RUNS_QUERY_PARAMS.TO, TEST_RUNS_QUERY_PARAMS.RUN_NAME, TEST_RUNS_QUERY_PARAMS.REQUESTOR, TEST_RUNS_QUERY_PARAMS.GROUP,
+      TEST_RUNS_QUERY_PARAMS.SUBMISSION_ID, TEST_RUNS_QUERY_PARAMS.BUNDLE, TEST_RUNS_QUERY_PARAMS.TEST_NAME, TEST_RUNS_QUERY_PARAMS.RESULT, TEST_RUNS_QUERY_PARAMS.STATUS, TEST_RUNS_QUERY_PARAMS.TAGS
     ];
 
     // Create a new URLSearchParams object with the data that actually affects data fetch
@@ -223,10 +223,10 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
         let value = searchParams.get(key) || '';
 
         // Normalize order-independent parameters
-        if (key === RUN_QUERY_PARAMS.TAGS ||
-            key === RUN_QUERY_PARAMS.RESULT || 
-            key === RUN_QUERY_PARAMS.STATUS || 
-            key === RUN_QUERY_PARAMS.REQUESTOR) {
+        if (key === TEST_RUNS_QUERY_PARAMS.TAGS ||
+            key === TEST_RUNS_QUERY_PARAMS.RESULT || 
+            key === TEST_RUNS_QUERY_PARAMS.STATUS || 
+            key === TEST_RUNS_QUERY_PARAMS.REQUESTOR) {
           value = value?.split(',').sort().join(',');
         }
 

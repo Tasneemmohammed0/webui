@@ -70,10 +70,10 @@ export function DateTimeFormatProvider({ children }: { children: React.ReactNode
   };
 
   const formatDate = useCallback((date: Date): string => {
-    let formattedDate: string = '';
+    let formattedDate: string = '-';
     try {
 
-      if(!(date instanceof Date)) {
+      if(!(date instanceof Date) || isNaN(date.getTime())) {
         throw new Error("Invalid date provided to formatDate");
       }
 
@@ -98,7 +98,6 @@ export function DateTimeFormatProvider({ children }: { children: React.ReactNode
       }
     } catch (error) {
       console.error("Error formatting date:", error);
-      formattedDate = '';
     }  
 
     return formattedDate;

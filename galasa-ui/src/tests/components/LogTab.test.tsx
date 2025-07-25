@@ -150,6 +150,47 @@ describe('LogTab', () => {
     });
   });
 
+  describe('Initial State and Props', () => {
+    it('scrolls to the specified initialLine on first render', async () => {
+      const targetLineNumber = 4;
+
+      // Mock the scrollIntoView function
+      const scrollIntoViewMock = jest.fn();
+      window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+      render(<LogTab logs={sampleLogs} initialLine={targetLineNumber} />);
+
+      // Wait for the line to appear
+      await screen.findByText(/Connection retry attempt 1/i);
+      const targetLineElement = screen.getByText(/Connection retry attempt 1/).closest('div');
+
+      // Assert 
+      expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not scroll if initialLine is out of bounds', async () => {
+      const scrollIntoViewMock = jest.fn();
+      window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+      
+      render(<LogTab logs={sampleLogs} initialLine={999} />);
+
+      await screen.findByText(/Starting application/);
+
+      expect(scrollIntoViewMock).not.toHaveBeenCalled();
+    });
+
+    it('does not scroll if initialLine is 0', async () => {
+      const scrollIntoViewMock = jest.fn();
+      window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+      render(<LogTab logs={sampleLogs} initialLine={0} />);
+
+      await screen.findByText(/Starting application/);
+
+      expect(scrollIntoViewMock).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Log Processing', () => {
     it('processes log lines and assigns correct levels', () => {
       render(<LogTab logs={sampleLogs} />);
