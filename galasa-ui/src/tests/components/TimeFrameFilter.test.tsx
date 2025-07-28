@@ -29,6 +29,13 @@ jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
+// Mock the DateTimeFormatContext to provide a default format
+jest.mock('@/contexts/DateTimeFormatContext', () => ({
+  useDateTimeFormat: () => ({
+    preferences: { locale: 'en-US' },
+  }),
+}));
+
 beforeEach(() => {
   // Reset the mock function before each test
   mockHandleValueChange.mockClear();

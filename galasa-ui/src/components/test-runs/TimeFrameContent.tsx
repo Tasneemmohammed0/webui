@@ -7,7 +7,7 @@
 
 import styles from '@/styles/TestRunsPage.module.css';
 import { TimeFrameValues } from '@/utils/interfaces';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import TimeFrameFilter from './TimeFrameFilter';
 import { addMonths, combineDateTime, extractDateTimeForUI } from '@/utils/timeOperations';
 import { InlineNotification } from '@carbon/react';
