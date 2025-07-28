@@ -36,7 +36,7 @@
   },
   "DateTimeFormatSection": {
     "title": "Datums-/Zeitformat",
-    "description": "Konfigurieren Sie das Format zur Anzeige von Datum und Uhrzeit.",
+    "description": "Konfiguriere das Format für die Anzeige von Daten und Uhrzeiten.",
     "dateTimeFormat": "Datums-/Zeitformat",
     "showDatesInBrowserLocale": "Datum und Uhrzeit basierend auf der Browsersprache anzeigen",
     "showDatesInCustomLocale": "Datum und Uhrzeit in einem benutzerdefinierten Format anzeigen",
