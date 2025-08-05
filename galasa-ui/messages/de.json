@@ -430,7 +430,7 @@
       "testName": {
         "label": "Testname",
         "placeholder": "beliebig",
-        "description": "Geben Sie den Namen eines bestimmten Tests ein, der in den Testläufen enthalten ist, die Sie finden möchten."
+        "description": "Gib den vollständig qualifizierten (langen) Testnamen eines bestimmten Tests ein, der in den Testläufen enthalten ist, die du finden möchtest."
       },
       "status": {
         "label": "Status",

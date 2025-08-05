@@ -410,7 +410,7 @@
       "testName": {
         "label": "Test Name",
         "placeholder": "any",
-        "description": "Enter the name of a specific test contained within the test runs you want to find."
+        "description": "Enter the fully qualified (long) test name of a specific test contained within the test runs you want to find."
       },
       "status": {
         "label": "Status",
