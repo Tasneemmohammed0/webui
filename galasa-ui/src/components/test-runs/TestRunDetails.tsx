@@ -264,7 +264,7 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
               </span>
             </div>
             <span className={styles.summaryStatus}>
-              {translations("test")}: {run?.testName}
+              {translations("test")}: {run?.testShortName}
             </span>
           </div>
           <Tabs
