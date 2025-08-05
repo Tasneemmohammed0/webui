@@ -62,13 +62,15 @@ const TestRunDetails = ({ runId, runDetailsPromise, runLogPromise, runArtifactsP
 
   const extractRunDetails = useCallback((runDetails: Run) => {
     setMethods(runDetails.testStructure?.methods || []);
+
     // Build run metadata object
     const runMetadata: RunMetadata = {
       runId: runId,
       result: runDetails.testStructure?.result!,
       status: runDetails.testStructure?.status!,
       runName: runDetails.testStructure?.runName!,
-      testName: runDetails.testStructure?.testShortName!,
+      testShortName: runDetails.testStructure?.testShortName!,
+      testName: runDetails.testStructure?.testName!,
       bundle: runDetails.testStructure?.bundle!,
       submissionId: runDetails.testStructure?.submissionId!,
       group: runDetails.testStructure?.group!,

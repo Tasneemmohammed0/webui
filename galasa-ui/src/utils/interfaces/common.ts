@@ -47,6 +47,7 @@ export interface runStructure {
   group: string;
   bundle: string;
   package: string;
+  testShortName: string;
   testName: string;
   tags:  string;
   status: string;
@@ -76,6 +77,6 @@ export interface DataPoint {
 
 
 export interface ColumnDefinition {
-  id: keyof runStructure;
+  id: keyof runStructure; 
   columnName: string;
 }

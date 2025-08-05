@@ -25,6 +25,7 @@ import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
 import { useFeatureFlags } from '@/contexts/FeatureFlagContext';
 import { FEATURE_FLAGS } from '@/utils/featureFlags';
 import TestRunGraph from './TestRunGraph';
+import { TestStructure } from '@/generated/galasaapi';
 
 interface TabConfig {
   id: string;
@@ -203,7 +204,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     if (!runs) {
       return [];
     }
-  
+
     return runs.map((run) => {
       const structure = run.testStructure || {};
       return {
@@ -214,7 +215,8 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
         group: structure.group || 'N/A',
         bundle: structure.bundle || 'N/A',
         package: structure.testName?.substring(0, structure.testName.lastIndexOf('.')) || 'N/A',
-        testName: structure.testShortName || structure.testName || 'N/A',
+        testShortName: structure.testShortName || structure.testName || 'N/A',
+        testName: structure.testName || 'N/A',
         tags: structure.tags ? structure.tags.join(', ') : 'N/A',
         status: structure.status || 'N/A',
         result: structure.result || 'N/A',
@@ -257,6 +259,7 @@ export default function TestRunsTabs({ requestorNamesPromise, resultsNamesPromis
     
     return ['testRuns', canonicalParams];
   }, [searchParams]);
+
 
   const {data: runsData, isLoading, isError } = useQuery<TestRunsData>({
     // Cache data based on search parameters

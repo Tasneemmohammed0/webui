@@ -15,6 +15,7 @@ export interface RunMetadata {
   result: string;
   status: string;
   testName: string;
+  testShortName: string;
   runName: string;
   bundle: string;
   submissionId: string;
