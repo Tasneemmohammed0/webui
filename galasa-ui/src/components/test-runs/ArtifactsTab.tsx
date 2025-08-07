@@ -201,6 +201,15 @@ export function ArtifactsTab({
         let currentNode: FolderNode = root;
         createFolderSegments(segments, currentNode, artifact);
       }
+
+      // Check for zos3270/terminals folder
+      if (segments[0] === 'zos3270' && segments[1] === 'terminals') {
+        // const folderExists = Object.values(currentNode.children).some(child => child.isFile === false);
+        console.log(`zos3270/terminals folder exists:`);
+        // You can add additional logic here if needed, e.g., highlight or mark this folder
+      } else {
+        console.log(`zos3270/terminals DOESN'T EXIST`);
+      }
     });
 
     setTreeData(root);

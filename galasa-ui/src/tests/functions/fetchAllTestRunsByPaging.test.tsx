@@ -31,7 +31,7 @@ jest.mock('@/utils/api', () => ({
 // Mock constants to control test behavior predictably
 jest.mock('@/utils/constants/common', () => ({
   CLIENT_API_VERSION: 'test-version',
-  MAX_RECORDS: 10,
+  MAX_DISPLAYABLE_TEST_RUNS: 10,
   BATCH_SIZE: 4,
 }));
 
@@ -113,7 +113,7 @@ describe('fetchAllTestRunsByPaging Function', () => {
     expect(mockGetRasSearchRuns).toHaveBeenCalledTimes(2);
   });
 
-  test('should stop fetching when MAX_RECORDS is reached and trim results', async () => {
+  test('should stop fetching when MAX_DISPLAYABLE_TEST_RUNS is reached and trim results', async () => {
     const page1Runs = [createMockRun(1), createMockRun(2), createMockRun(3), createMockRun(4)];
     const page2Runs = [createMockRun(5), createMockRun(6), createMockRun(7), createMockRun(8)];
     const page3Runs = [createMockRun(9), createMockRun(10), createMockRun(11), createMockRun(12)];

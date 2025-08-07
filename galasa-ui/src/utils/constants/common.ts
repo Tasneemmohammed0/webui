@@ -20,8 +20,9 @@ const COLORS = {
   BLUE_GRAY: '#607d8b',
 };
 
-// Maximum number of records to fetch in one go
-const MAX_RECORDS = 1000;
+const MAX_DISPLAYABLE_TEST_RUNS = 2000;
+
+const NOTIFICATION_VISIBLE_MILLISECS = 6000;
 
 const MINUTE_MS = 60 * 1000;
 const HOUR_MS = 60 * MINUTE_MS;
@@ -49,6 +50,7 @@ const COLUMNS_IDS = {
   BUNDLE: 'bundle',
   PACKAGE: 'package',
   TEST_NAME: 'testName',
+  TEST_SHORT_NAME: 'testShortName',
   STATUS: 'status',
   TAGS: 'tags',
   RESULT: 'result',
@@ -62,7 +64,8 @@ const RESULTS_TABLE_COLUMNS: ColumnDefinition[] = [
   { id: 'group', columnName: 'Group' },
   { id: 'bundle', columnName: 'Bundle' },
   { id: 'package', columnName: 'Package' },
-  { id: 'testName', columnName: 'Test Name' },
+  { id: 'testShortName', columnName: 'Test Name (short)' },
+  { id: 'testName', columnName: 'Test Name (full)' },
   { id: 'status', columnName: 'Status' },
   { id: 'tags', columnName: 'Tags' },
   { id: 'result', columnName: 'Result' },
@@ -76,6 +79,7 @@ const TEST_RUNS_QUERY_PARAMS = {
   GROUP: 'group',
   BUNDLE: 'bundle',
   PACKAGE: 'package',
+  TEST_SHORT_NAME: 'testShortName',
   TEST_NAME: 'testName',
   SUBMISSION_ID: 'submissionId',
   STATUS: 'status',
@@ -111,7 +115,7 @@ const DEFAULT_VISIBLE_COLUMNS: string[] = [
   COLUMNS_IDS.SUBMITTED_AT,
   COLUMNS_IDS.TEST_RUN_NAME,
   COLUMNS_IDS.REQUESTOR,
-  COLUMNS_IDS.TEST_NAME,
+  COLUMNS_IDS.TEST_SHORT_NAME,
   COLUMNS_IDS.STATUS,
   COLUMNS_IDS.RESULT,
 ];
@@ -154,7 +158,8 @@ const TEST_RUN_PAGE_TABS = ['overview', 'methods', 'runLog', 'artifacts'];
 export {
   CLIENT_API_VERSION,
   COLORS,
-  MAX_RECORDS,
+  MAX_DISPLAYABLE_TEST_RUNS,
+  NOTIFICATION_VISIBLE_MILLISECS,
   MINUTE_MS,
   HOUR_MS,
   DAY_MS,

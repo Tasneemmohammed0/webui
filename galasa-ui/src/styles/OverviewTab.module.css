@@ -11,7 +11,7 @@
 /* CSS Grid approach for perfect alignment */
 .info {
   display: grid;
-  grid-template-columns: 125px 1fr;
+  grid-template-columns: 150px 1fr;
   gap: 10px;
   margin-bottom: 8px;
   align-items: baseline;

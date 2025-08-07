@@ -39,7 +39,7 @@ jest.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
     const translations: Record<string, string> = {
       bundle: 'Bundle',
-      test: 'Test',
+      testName: 'Test',
       package: 'Package',
       group: 'Group',
       submissionId: 'Submission ID',
@@ -69,6 +69,7 @@ const completeMetadata: RunMetadata = {
   runName: 'C123456',
   bundle: 'bundle-xyz',
   testName: 'TestAlpha',
+  testShortName: 'TestAlphaShort',
   group: 'GroupA',
   status: 'finished',
   result: 'Passed',

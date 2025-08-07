@@ -32,7 +32,8 @@
     "features": {
       "testRunSearch": "Test Run searching and viewing",
       "internationalization": "Internationalization/Multiple language support",
-      "graph": " Test Run Graphs"
+      "is3270ScreenEnabled": "Support for viewing and downloading 3270 terminals",
+      "graph": "Test Run Graphs"
     }
   },
   "DateTimeSettings": {
@@ -216,7 +217,8 @@
   },
   "OverviewTab": {
     "bundle": "Bundle",
-    "test": "Test",
+    "testName": "Test Name",
+    "testShortName": "Test Name (short)",
     "package": "Package",
     "group": "Group",
     "submissionId": "Submission ID",
@@ -279,6 +281,7 @@
     "bundle": "Bundle",
     "package": "Package",
     "testName": "Test Name",
+    "testShortName": "Test Name (short)",
     "tags": "Tags",
     "status": "Status",
     "result": "Result",
@@ -286,7 +289,7 @@
     "noTestRunsFound": "No test runs were found for the selected timeframe",
     "isloading": "Loading test results...",
     "limitExceededTitle": "Limit Exceeded",
-    "limitExceededSubtitle": "Your query returned more than {maxRecords} results. Showing the first {maxRecords} records.",
+    "limitExceededSubtitle": "Your query returned more than {maxRecords} results. Showing the first {maxRecords} records. To avoid this in the future narrow your time frame or change your search criteria to return fewer results.",
     "timeFrameText": {
       "default": "Showing test runs submitted in the last 24 hours",
       "range": "Showing test runs submitted between {from} and {to}"
@@ -322,7 +325,7 @@
 
     "limitExceeded": {
       "title": "Limit Exceeded",
-      "subtitle": "Your query returned more than {MAX_RECORDS} results. Showing the first {MAX_RECORDS} records."
+      "subtitle": "Your query returned more than {maxRecords} results. Showing the first {maxRecords} records. To avoid this in the future narrow your time frame or change your search criteria to return fewer results."
     },
 
     "timeFrameText": {
@@ -408,7 +411,7 @@
       "testName": {
         "label": "Test Name",
         "placeholder": "any",
-        "description": "Enter the name of a specific test contained within the test runs you want to find."
+        "description": "Enter the fully qualified (long) test name of a specific test contained within the test runs you want to find."
       },
       "status": {
         "label": "Status",
@@ -464,6 +467,7 @@
     "bundle": "Bundle",
     "package": "Package",
     "testName": "Test Name",
+    "testShortName": "Test Name (short)",
     "tags": "Tags",
     "status": "Status",
     "result": "Result",

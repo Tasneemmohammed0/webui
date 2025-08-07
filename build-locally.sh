@@ -142,7 +142,7 @@ function generate_rest_client {
     fi
 
     # Set default SOURCE_MAVEN to development URL if not provided
-    if [[ -z SOURCE_MAVEN ]]; then
+    if [[ -z "$SOURCE_MAVEN" ]]; then        
         SOURCE_MAVEN="https://development.galasa.dev/main/maven-repo/obr"
         warn "SOURCE_MAVEN env not set, defaulting to $SOURCE_MAVEN"
     fi

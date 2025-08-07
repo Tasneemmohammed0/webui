@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import TestRunsTable from '@/components/test-runs/TestRunsTable';
-import { MAX_RECORDS, RESULTS_TABLE_COLUMNS } from '@/utils/constants/common';
+import { MAX_DISPLAYABLE_TEST_RUNS, RESULTS_TABLE_COLUMNS } from '@/utils/constants/common';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 const mockRouterPush = jest.fn();
@@ -45,9 +45,10 @@ jest.mock('next-intl', () => ({
       'pagination.items': 'items',
       'pagination.pages': 'pages',
       'pagination.pageNumberText': 'Page number',
-      noTestRunsFound: 'No test runs were found for the selected timeframe',
+      'pagination.of': 'of {total}',
       noColumnsSelected:
         'All of the columns have been hidden in the table design tab, so no result details will be visible.',
+      noTestRunsFound: 'No test runs were found for the selected timeframe',
       isloading: 'Loading...',
       submittedAt: 'Submitted at',
       runName: 'Test Run name',
@@ -55,7 +56,9 @@ jest.mock('next-intl', () => ({
       testName: 'Test Name',
       status: 'Status',
       result: 'Result',
-      'pagination.of': 'of {total}',
+
+      limitExceededSubtitle:
+        'Your query returned more than {maxRecords} results. To avoid this in the future narrow your time frame or change your search criteria to return fewer results.',
     };
 
     let text = translations[key] || key;
@@ -171,7 +174,9 @@ describe('TestRunsTable Component', () => {
 
     // Assert
     const warningMessage = await screen.findByText(
-      `Your query returned more than ${MAX_RECORDS} results. Showing the first ${MAX_RECORDS} records.`
+      `Your query returned more than ` +
+        MAX_DISPLAYABLE_TEST_RUNS +
+        ` results. To avoid this in the future narrow your time frame or change your search criteria to return fewer results.`
     );
     expect(warningMessage).toBeInTheDocument();
   });

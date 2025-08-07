@@ -32,6 +32,7 @@
     "features": {
       "testRunSearch": "Testlauf-Suche und Anzeige",
       "internationalization": "Internationalisierung/Mehrsprachige Unterstützung",
+      "is3270ScreenEnabled": "Unterstützung für das Anzeigen und Herunterladen von 3270-Terminals",
       "graph": "Testlauf-Diagramm"
     }
   },
@@ -237,7 +238,8 @@
   },
   "OverviewTab": {
     "bundle": "Bundle",
-    "test": "Test",
+    "testName": "Testname",
+    "testShortName": "Testname (kurz)",
     "package": "Paket",
     "group": "Gruppe",
     "submissionId": "Übermittlungs-ID",
@@ -300,6 +302,7 @@
     "bundle": "Bundle",
     "package": "Paket",
     "testName": "Testname",
+    "testShortName": "Testname (kurz)",
     "tags": "Tags",
     "status": "Status",
     "result": "Ergebnis",
@@ -307,7 +310,7 @@
     "noTestRunsFound": "Für den ausgewählten Zeitraum wurden keine Testläufe gefunden",
     "isloading": "Testergebnisse werden geladen...",
     "limitExceededTitle": "Limit überschritten",
-    "limitExceededSubtitle": "Ihre Abfrage ergab mehr als {maxRecords} Ergebnisse. Es werden die ersten {maxRecords} Datensätze angezeigt.",
+    "limitExceededSubtitle": "Ihre Abfrage hat mehr als {maxRecords} Ergebnisse zurückgegeben. Es werden die ersten {maxRecords} Datensätze angezeigt. Um dies in Zukunft zu vermeiden, schränken Sie Ihren Zeitrahmen ein oder ändern Sie Ihre Suchkriterien, um weniger Ergebnisse zu erhalten.",
     "timeFrameText": {
       "default": "Zeige Testläufe der letzten 24 Stunden",
       "range": "Zeige Testläufe von {from} bis {to}"
@@ -343,7 +346,7 @@
 
     "limitExceeded": {
       "title": "Grenzwert überschritten",
-      "subtitle": "Ihre Abfrage hat mehr als {MAX_RECORDS} Ergebnisse geliefert. Es werden die ersten {MAX_RECORDS} Datensätze angezeigt."
+      "subtitle": "Ihre Abfrage hat mehr als {maxRecords} Ergebnisse zurückgegeben. Es werden die ersten {maxRecords} Datensätze angezeigt. Um dies in Zukunft zu vermeiden, schränken Sie Ihren Zeitrahmen ein oder ändern Sie Ihre Suchkriterien, um weniger Ergebnisse zu erhalten."
     },
 
     "timeFrameText": {
@@ -429,7 +432,7 @@
       "testName": {
         "label": "Testname",
         "placeholder": "beliebig",
-        "description": "Geben Sie den Namen eines bestimmten Tests ein, der in den Testläufen enthalten ist, die Sie finden möchten."
+        "description": "Gib den vollständig qualifizierten (langen) Testnamen eines bestimmten Tests ein, der in den Testläufen enthalten ist, die du finden möchtest."
       },
       "status": {
         "label": "Status",
@@ -485,6 +488,7 @@
     "bundle": "Bundle",
     "package": "Paket",
     "testName": "Testname",
+    "testShortName": "Testname (kurz)",
     "tags": "Tags",
     "status": "Status",
     "result": "Ergebnis",

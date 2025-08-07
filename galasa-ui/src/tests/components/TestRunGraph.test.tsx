@@ -15,12 +15,12 @@ jest.mock('next-intl', () => ({
   useTranslations: () => (key: string, vars?: Record<string, any>) => {
     const translations: Record<string, string> = {
       'timeFrameText.range': 'Showing test runs submitted between {from} and {to}',
+      'limitExceeded.title': 'Limit Exceeded',
+      'limitExceeded.subtitle': 'Showing only the first {MAX_DISPLAYABLE_TEST_RUNS} records.',
       errorLoadingGraph: 'Error loading graph',
       loadingGraph: 'Loading graph...',
       noTestRunsFound: 'No test runs found',
       submittedAt: 'Submitted at',
-      'limitExceeded.title': 'Limit Exceeded',
-      'limitExceeded.subtitle': 'Showing only the first {MAX_RECORDS} records.',
     };
     let text = translations[key] || key;
     if (vars) {

@@ -15,12 +15,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import styles from '@/styles/TestRunsGraph.module.css';
 import { runStructure, ColumnDefinition, DataPoint } from '@/utils/interfaces';
-import { COLORS, MAX_RECORDS } from '@/utils/constants/common';
+import { COLORS, MAX_DISPLAYABLE_TEST_RUNS } from '@/utils/constants/common';
 import { TEST_RUNS } from '@/utils/constants/breadcrumb';
 import useHistoryBreadCrumbs from '@/hooks/useHistoryBreadCrumbs';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
 import { getTooltipHTML } from '../../utils/generateTooltipHTML';
+import { useDisappearingNotification } from '@/hooks/useDisappearingNotification';
 
 interface TestRunGraphProps {
   runsList: runStructure[];
@@ -56,6 +57,8 @@ export default function TestRunGraph({
   const searchParams = useSearchParams();
   const { pushBreadCrumb } = useHistoryBreadCrumbs();
   const chartContainerRef = useRef<HTMLDivElement>(null);
+
+  const isNotificationVisible = useDisappearingNotification(limitExceeded);
 
   const headerDefinitions = useMemo(() => {
     if (!runsList.length) return [];
@@ -235,11 +238,13 @@ export default function TestRunGraph({
 
   return (
     <div className={styles.resultsPageContainer}>
-      {limitExceeded && (
+      {limitExceeded && isNotificationVisible && (
         <InlineNotification
           kind="warning"
           title={translations('limitExceeded.title')}
-          subtitle={translations('limitExceeded.subtitle', { MAX_RECORDS })}
+          subtitle={translations('limitExceeded.subtitle', {
+            maxRecords: MAX_DISPLAYABLE_TEST_RUNS,
+          })}
           className={styles.notification}
         />
       )}

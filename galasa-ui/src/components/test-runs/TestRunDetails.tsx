@@ -34,7 +34,11 @@ import { InlineNotification } from '@carbon/react';
 import { Button } from '@carbon/react';
 import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { SINGLE_RUN_QUERY_PARAMS, TEST_RUN_PAGE_TABS } from '@/utils/constants/common';
+import {
+  SINGLE_RUN_QUERY_PARAMS,
+  TEST_RUN_PAGE_TABS,
+  NOTIFICATION_VISIBLE_MILLISECS,
+} from '@/utils/constants/common';
 import { NotificationType } from '@/utils/types/common';
 
 interface TestRunDetailsProps {
@@ -84,7 +88,8 @@ const TestRunDetails = ({
         result: runDetails.testStructure?.result!,
         status: runDetails.testStructure?.status!,
         runName: runDetails.testStructure?.runName!,
-        testName: runDetails.testStructure?.testShortName!,
+        testShortName: runDetails.testStructure?.testShortName!,
+        testName: runDetails.testStructure?.testName!,
         bundle: runDetails.testStructure?.bundle!,
         submissionId: runDetails.testStructure?.submissionId!,
         group: runDetails.testStructure?.group!,
@@ -113,7 +118,6 @@ const TestRunDetails = ({
             : '-',
         tags: runDetails.testStructure?.tags!,
       };
-
       setRun(runMetadata);
     },
     [runId, formatDate]
@@ -154,8 +158,7 @@ const TestRunDetails = ({
         subtitle: translations('copiedMessage'),
       });
 
-      // Hide notification after 6 seconds
-      setTimeout(() => setNotification(null), 6000);
+      setTimeout(() => setNotification(null), NOTIFICATION_VISIBLE_MILLISECS);
     } catch (err) {
       console.error('Failed to copy:', err);
       setNotification({
@@ -297,7 +300,7 @@ const TestRunDetails = ({
               </span>
             </div>
             <span className={styles.summaryStatus}>
-              {translations('test')}: {run?.testName}
+              {translations('test')}: {run?.testShortName}
             </span>
           </div>
           <Tabs selectedIndex={selectedTabIndex} onChange={handleTabChange}>

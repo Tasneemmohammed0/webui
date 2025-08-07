@@ -50,7 +50,8 @@ const OverviewTab = ({ metadata }: { metadata: RunMetadata }) => {
   return (
     <>
       <InlineText title={`${translations('bundle')}:`} value={metadata?.bundle} />
-      <InlineText title={`${translations('test')}:`} value={metadata?.testName} />
+      <InlineText title={`${translations('testName')}:`} value={metadata?.testName} />
+      <InlineText title={`${translations('testShortName')}:`} value={metadata?.testShortName} />
       <InlineText title={`${translations('package')}:`} value={metadata?.package} />
       <InlineText title={`${translations('group')}:`} value={metadata?.group} />
       <InlineText title={`${translations('submissionId')}:`} value={metadata?.submissionId} />

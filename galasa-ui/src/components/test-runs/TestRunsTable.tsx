@@ -31,12 +31,13 @@ import StatusIndicator from '../common/StatusIndicator';
 import { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ErrorPage from '@/app/error/page';
-import { MAX_RECORDS } from '@/utils/constants/common';
+import { MAX_DISPLAYABLE_TEST_RUNS } from '@/utils/constants/common';
 import { useTranslations } from 'next-intl';
 import { InlineNotification } from '@carbon/react';
 import useHistoryBreadCrumbs from '@/hooks/useHistoryBreadCrumbs';
 import { TEST_RUNS } from '@/utils/constants/breadcrumb';
 import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
+import { useDisappearingNotification } from '@/hooks/useDisappearingNotification';
 
 interface CustomCellProps {
   header: string;
@@ -69,6 +70,8 @@ export default function TestRunsTable({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
+  const isNotificationVisible = useDisappearingNotification(limitExceeded);
 
   const headers =
     orderedHeaders
@@ -180,12 +183,14 @@ export default function TestRunsTable({
 
   return (
     <div className={styles.resultsPageContainer}>
-      {limitExceeded && (
+      {limitExceeded && isNotificationVisible && (
         <InlineNotification
           className={styles.notification}
           kind="warning"
-          title="Limit Exceeded"
-          subtitle={`Your query returned more than ${MAX_RECORDS} results. Showing the first ${MAX_RECORDS} records.`}
+          title={translations('limitExceededTitle')}
+          subtitle={translations('limitExceededSubtitle', {
+            maxRecords: MAX_DISPLAYABLE_TEST_RUNS,
+          })}
         />
       )}
       <p className={styles.timeFrameText}>{timeFrameText}</p>

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
+
 'use client';
 import {
   closestCorners,
@@ -29,6 +30,7 @@ import { ColumnDefinition } from '@/utils/interfaces';
 import { sortOrderType } from '@/utils/types/common';
 import { DEFAULT_VISIBLE_COLUMNS, RESULTS_TABLE_COLUMNS } from '@/utils/constants/common';
 import { Dispatch, SetStateAction } from 'react';
+import { useDisappearingNotification } from '@/hooks/useDisappearingNotification';
 
 interface TableDesignContentProps {
   selectedRowIds: string[];
@@ -56,6 +58,7 @@ export default function TableDesignContent({
   setColumnsOrder,
 }: TableDesignContentProps) {
   const translations = useTranslations('TableDesignContent');
+
   const handleRowSelect = (rowId: string) => {
     setSelectedRowIds((prev: string[]) => {
       if (prev.includes(rowId)) {
@@ -77,6 +80,7 @@ export default function TableDesignContent({
     }
   };
 
+  const isNotificationVisible = useDisappearingNotification(selectedRowIds.length === 0);
   const getRowPosition = (id: string) => tableRows.findIndex((row) => row.id === id);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -184,7 +188,7 @@ export default function TableDesignContent({
             );
           })}
         </SortableContext>
-        {selectedRowIds.length === 0 && (
+        {selectedRowIds.length === 0 && isNotificationVisible && (
           <InlineNotification
             className={styles.notification}
             kind={'warning'}
