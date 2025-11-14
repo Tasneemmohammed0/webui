@@ -24,7 +24,7 @@ import { TableRowProps } from '@carbon/react/lib/components/DataTable/TableRow';
 import { TableHeadProps } from '@carbon/react/lib/components/DataTable/TableHead';
 import { TableBodyProps } from '@carbon/react/lib/components/DataTable/TableBody';
 import { Edit, TrashCan } from '@carbon/icons-react';
-import styles from '@/styles/UsersList.module.css';
+import styles from '@/styles/users/UsersList.module.css';
 import Link from 'next/link';
 import { InlineNotification } from '@carbon/react';
 import { deleteUserFromService } from '@/actions/userServerActions';
@@ -161,6 +161,9 @@ export default function UsersTable({ usersListPromise, currentUserPromise }: Use
 
     loadUsers();
     checkForEditUsersPermission();
+
+    // If you're adding extra state to this hook, make sure to review the dependency array due to the warning suppression:
+    // eslint-disable-next-line
   }, [currentUserPromise, usersListPromise]);
 
   if (isError) {

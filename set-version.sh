@@ -104,10 +104,10 @@ function bump_build_gradle_version {
 }
 
 function bump_client_api_version {
-    source_file="$BASEDIR/galasa-ui/src/utils/constants.ts"
+    source_file="$BASEDIR/galasa-ui/src/utils/constants/common.ts"
     temp_file="$temp_dir/webui.constants.ts"
 
-    cat $source_file | sed "s/CLIENT_API_VERSION =.*/CLIENT_API_VERSION = \"$component_version\";/1" > $temp_file
+    cat $source_file | sed "s/CLIENT_API_VERSION =.*/CLIENT_API_VERSION = '$component_version';/1" > $temp_file
     cp $temp_file $source_file
 }
 

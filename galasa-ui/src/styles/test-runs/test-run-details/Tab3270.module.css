@@ -1,0 +1,97 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+
+.tab3270Container {
+  height: min(calc(100vh - 400px), 550px);
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.innerScreenshotTable {
+  max-height: min(calc(100vh - 450px), 550px);
+  overflow-y: auto;
+  /* Stops sticky header overlapping table elements when scrollToTop() is called. */
+  scroll-padding-top: 48px;
+}
+
+.loadingTable {
+  max-height: calc(100vh - 402px);
+  overflow-y: auto;
+}
+
+.terminalDropdownMenu {
+  padding-left: 8px;
+  width: max-content;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.tableToolSearchBar {
+  z-index: 1;
+  position: relative;
+}
+
+.tableOfScreenshotsContainer {
+  width: 43%;
+  min-width: 400px;
+  overflow-x: hidden;
+  padding-right: 1px;
+  float: left;
+}
+
+.screenshotContainer {
+  width: 57%;
+  height: 100%;
+  min-width: 400px;
+  top: 90px;
+  padding-left: 30px;
+  float: left;
+  flex-direction: column;
+}
+
+.screenshot {
+  object-fit: contain; /* Forces the screenshot to be in origninal ratio */
+  width: 100%;
+  max-width: 1100px;
+  max-height: min(calc(100vh - 450px), 550px);
+}
+
+#skeletonScreenshot {
+  object-fit: contain;
+  max-width: 1100px;
+  height: calc(100% - 48px);
+  width: auto;
+}
+
+.notification {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.screenshotToolbar {
+  max-width: 1100px;
+  height: 48px;
+  display: flex;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.middleAlignedButtons {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+}
+
+.rightAlignedButtons {
+  display: flex;
+  gap: 10px;
+}

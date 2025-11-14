@@ -5,7 +5,7 @@
  */
 'use client';
 
-import styles from '@/styles/TokenCard.module.css';
+import styles from '@/styles/tokens/TokenCard.module.css';
 import { Password } from '@carbon/icons-react';
 import { SelectableTile } from '@carbon/react';
 import { AuthToken } from '@/generated/galasaapi';

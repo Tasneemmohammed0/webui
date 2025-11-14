@@ -5,7 +5,7 @@
  */
 'use client';
 import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
-import styles from '@/styles/FormatSection.module.css';
+import styles from '@/styles/mysettings/FormatSection.module.css';
 import { PREFERENCE_KEYS, SUPPORTED_LOCALES, TIME_FORMATS } from '@/utils/constants/common';
 import { TimeFormat, Locale, DateTimeFormats } from '@/utils/types/dateTimeSettings';
 import { Dropdown } from '@carbon/react';

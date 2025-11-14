@@ -7,7 +7,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ProfileDetailsProps, UpdateUserRolePayload } from '@/utils/interfaces';
 import { RBACRole, UserData } from '@/generated/galasaapi';
-import styles from '@/styles/UserRole.module.css';
+import styles from '@/styles/users/UserRole.module.css';
 import { ButtonSet, Button, Dropdown, Loading } from '@carbon/react';
 import ErrorPage from '@/app/error/page';
 import { InlineNotification } from '@carbon/react';
@@ -85,7 +85,6 @@ export default function UserRoleSection({
           setUserRoles(flattenedRoles);
         }
       } catch (err) {
-        console.log(err);
         setIsError(true);
       } finally {
         setIsLoading(false);

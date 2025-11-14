@@ -13,7 +13,7 @@
     "logout": "Abmelden"
   },
   "LanguageSelector": {
-    "label": "Sprache"
+    "tooltip": "Sprache auswählen"
   },
   "ThemeSelector": {
     "label": "Thema"
@@ -31,8 +31,6 @@
     "description": "Früher Zugriff auf neue Funktionen. Diese Funktionen sind experimentell und können sich ändern oder entfernt werden.",
     "features": {
       "testRunSearch": "Testlauf-Suche und Anzeige",
-      "internationalization": "Internationalisierung/Mehrsprachige Unterstützung",
-      "is3270ScreenEnabled": "Unterstützung für das Anzeigen und Herunterladen von 3270-Terminals",
       "graph": "Testlauf-Diagramm"
     }
   },
@@ -65,6 +63,11 @@
     "descriptionline2": "Ein Token hat die gleichen Zugriffsrechte wie der Benutzer, der es erstellt hat.",
     "deleteButtontext": "{count} ausgewählte Zugriffstoken löschen",
     "error": "Fehler beim Abrufen der Token vom Galasa API-Server"
+  },
+  "ResultsTablePageSizingSetting": {
+    "title": "Testergebnisabfrage",
+    "description": "Durch Ändern dieser Einstellung wird die Standardanzahl der Testergebnisse festgelegt, die in der Tabelle für alle Ihre Abfragen pro Seite angezeigt werden.",
+    "defaultTestRunsLabel": "Standardanzahl der Testergebnisse pro Seite"
   },
   "userRole": {
     "heading": "Benutzerrolle",
@@ -210,20 +213,22 @@
   "LogTab": {
     "title": "Ablaufprotokoll",
     "description": "Schrittweises Protokoll des Testlaufs. Kann heruntergeladen werden.",
-    "search_placeholder": "Protokoll durchsuchen",
-    "no_matches": "Keine Treffer",
-    "match_counter": "{current} von {total}",
-    "match_previous": "Vorheriger Treffer",
-    "match_next": "Nächster Treffer",
-    "match_case": "Groß-/Kleinschreibung beachten",
-    "match_whole_word": "Ganzes Wort",
-    "filters_menu_title": "Inhalte filtern",
-    "filter_error": "Fehler",
-    "filter_warn": "Warnung",
-    "filter_info": "Info",
-    "filter_debug": "Debug",
-    "filter_trace": "Trace",
-    "download_button": "Laufprotokoll herunterladen"
+    "searchPlaceholder": "Protokoll durchsuchen",
+    "noMatches": "Keine Treffer",
+    "matchCounter": "{current} von {total}",
+    "matchPrevious": "Vorheriger Treffer",
+    "matchNext": "Nächster Treffer",
+    "matchCase": "Groß-/Kleinschreibung beachten",
+    "matchWholeWord": "Ganzes Wort",
+    "filtersMenuTitle": "Inhalte filtern",
+    "filterError": "Fehler",
+    "filterWarn": "Warnung",
+    "filterInfo": "Info",
+    "filterDebug": "Debug",
+    "filterTrace": "Trace",
+    "downloadButton": "Laufprotokoll herunterladen",
+    "copyPermalinkButton": "Permalink mit ausgewählten Zeilen kopieren",
+    "selectLinesToCreatePermalink": "Zeilen für Permalink wählen"
   },
   "MethodsTab": {
     "title": "Methoden",
@@ -253,6 +258,23 @@
     "recentRunsLink": "Zeige letzte Ausführungen desselben Tests...",
     "runRetriesLink": "Zeige alle Versuche dieses Testlaufs..."
   },
+  "3270Tab": {
+    "Terminal": "Terminal",
+    "screenNumber": "Bildschirmnummer",
+    "searchPlaceholder": "Suchen",
+    "nextImage": "Nächstes Bild",
+    "previousImage": "Vorheriges Bild",
+    "copyImage": "Bild in die Zwischenablage kopieren",
+    "downloadImage": "Bild herunterladen",
+    "copiedTitle": "Bild erfolgreich kopiert:",
+    "copiedMessage": "Das 3270-Screenshot-Bild wurde erfolgreich in die Zwischenablage kopiert.",
+    "errorCopyTitle": "Bild nicht erfolgreich kopiert:",
+    "copyFailedMessage": "Das 3270-Screenshot-Bild konnte nicht in die Zwischenablage kopiert werden. Fehler:",
+    "copyNoCanvas": "Canvas-Element nicht gefunden.",
+    "copyNoBlob": "Blob konnte nicht aus Canvas abgerufen werden.",
+    "downloadErrortitle": "Bilddownload fehlgeschlagen:",
+    "downloadFailedMessage": "Das Herunterladen des 3270-Screenshot-Bilds ist fehlgeschlagen. Es konnte kein Canvas-Element zum Herunterladen des Bilds gefunden werden."
+  },
   "TestRunDetails": {
     "title": "Testlauf: {runName}",
     "status": "Status",
@@ -281,7 +303,12 @@
     "copyMessage": "Seiten-URL kopieren",
     "copiedTitle": "URL erfolgreich kopiert: ",
     "copiedMessage": "Die URL dieser Seite wurde in die Zwischenablage kopiert.",
-    "copyFailedMessage": "Fehler beim Kopieren der Seiten-URL"
+    "copyFailedMessage": "Fehler beim Kopieren der Seiten-URL",
+    "saveQuery": "Abfrage speichern",
+    "editQueryName": "Abfragenamen bearbeiten",
+    "nameExistsError": "Eine Abfrage mit diesem Namen existiert bereits.",
+    "queryUpdatedMessage": "Die Abfrage wurde erfolgreich aktualisiert.",
+    "newQuerySavedMessage": "Ihre Abfrage „{name}“ wurde erfolgreich gespeichert."
   },
   "TestRunSkeleton": {
     "status": "Status",
@@ -336,6 +363,7 @@
     "bundle": "Paket",
     "package": "Paket",
     "testName": "Testname",
+    "testShortName": "Testname (kurz)",
     "status": "Status",
     "tags": "Tags",
     "result": "Ergebnis",
@@ -359,7 +387,7 @@
       "tableDesign": "Tabellendesign",
       "searchCriteria": "Suchkriterien",
       "results": "Ergebnisse",
-      "graphs": "Diagramme"
+      "graph": "Diagramme"
     },
     "content": {
       "timeframe": "Diese Seite befindet sich im Aufbau. Derzeit werden alle Ergebnisse der letzten 24 Stunden angezeigt.",
@@ -372,14 +400,22 @@
     "notFoundDescription": "Kein Lauf mit ID: {id} gefunden"
   },
   "TimeFrame": {
-    "selectEnvelope": "Wählen Sie den Zeitraum aus, gegen den die Einreichungszeit jedes Testlaufs verglichen wird.",
-    "envelopeDescription": "Testläufe, die innerhalb dieses Zeitraums eingereicht wurden, werden in den Ergebnissen angezeigt, sofern keine anderen Filter angewendet werden.",
+    "selectEnvelope": "Wählen Sie den Zeitraum aus, mit dem die Einreichungszeit jedes Testlaufs verglichen wird.",
+    "envelopeDescription": "Testläufe, die innerhalb dieses Zeitraums eingereicht wurden, werden in den Ergebnissen angezeigt, sofern andere Filter angewendet werden.",
     "invalidTimeFrame": "Ungültiger Zeitraum",
     "autoCorrection": "Automatische Korrektur",
-    "toBeforeFrom": "'Bis'-Datum darf nicht vor dem 'Von'-Datum liegen.",
+    "toBeforeFromErrorMessage": "Die 'Von'-Zeit muss vor der 'Bis'-Zeit liegen. Wählen Sie einen gültigen Zeitraum aus.",
+    "toBeforeFromWarningOnly": "'Von'-Zeitpunkt ist in der Zukunft. Die aktuelle Abfrage liefert keine Ergebnisse.",
     "dateRangeExceeded": "Der Datumsbereich darf {maxMonths} Monate nicht überschreiten; das 'Bis'-Datum wurde angepasst.",
     "dateRangeCapped": "Der Datumsbereich wurde auf die aktuelle Zeit begrenzt.",
-    "invalidTimeText": "Bitte geben Sie eine gültige Uhrzeit im Format HH:MM ein."
+    "invalidTimeText": "Bitte geben Sie eine gültige Uhrzeit im Format HH:MM ein.",
+    "specificTimeTitle": "Eine bestimmte Uhrzeit",
+    "durationTitle": "Dauer vor der '{boldTo}'-Zeit",
+    "boldTo": "'Bis'",
+    "nowTitle": "Jetzt",
+    "nowDescription": "Der Zeitpunkt, an dem die Abfrageergebnisse angezeigt oder aktualisiert werden",
+    "from": "Von",
+    "to": "Bis"
   },
   "DateTimePicker": {
     "invalidTimeText": "Bitte geben Sie eine gültige Uhrzeit im Format HH:mm ein.",
@@ -388,13 +424,10 @@
     "date": "Datum",
     "time": "Uhrzeit"
   },
-  "TimeFrameFilter": {
+  "DurationFilter": {
     "days": "Tage",
     "hours": "Stunden",
-    "minutes": "Minuten",
-    "from": "Von",
-    "to": "Bis",
-    "duration": "Dauer"
+    "minutes": "Minuten"
   },
   "SearchCriteriaContent": {
     "description": "Bearbeiten Sie die Suchkriterien, um die gewünschten Testergebnisse anzuzeigen. Vergessen Sie nicht, auf 'Speichern' zu klicken, um Ihre Änderungen an der Abfrage zu übernehmen.",
@@ -496,5 +529,32 @@
     "none": "Keine",
     "asc": "Aufsteigend",
     "desc": "Absteigend"
+  },
+  "CollapsibleSidebar": {
+    "newQuerySavedTitle": "Neue Abfrage erstellt",
+    "newQuerySavedMessage": "Ihre Abfrage „{name}“ wurde erfolgreich gespeichert.",
+    "savedQueries": "Gespeicherte Abfragen",
+    "savedQueriesHeaderLabel": "Kopfzeile Gespeicherte Abfragen",
+    "savedQueriesSidebarLabel": "Seitenleiste Gespeicherte Abfragen",
+    "searchSavedQueries": "Gespeicherte Abfragen durchsuchen",
+    "addCurrentQuery": "Aktuelle Abfrage hinzufügen"
+  },
+  "QueryItem": {
+    "dragHandle": "Zum Neuordnen ziehen",
+    "actions": "Aktionen",
+    "rename": "Umbenennen...",
+    "delete": "Löschen",
+    "copyToClipboard": "In Zwischenablage kopieren",
+    "setAsDefault": "Als Standard festlegen",
+    "duplicate": "Duplizieren",
+    "copiedTitle": "URL erfolgreich kopiert",
+    "copiedMessage": "Die URL der Abfrage \"{name}\" wurde in die Zwischenablage kopiert.",
+    "errorTitle": "Fehler",
+    "successTitle": "Erfolg",
+    "copyFailedMessage": "Die URL der Abfrage \"{name}\" konnte nicht kopiert werden.",
+    "setAsDefaultMessage": "Die Abfrage \"{name}\" ist nun Ihre Standardabfrage.",
+    "deleteTitle": "Abfrage gelöscht",
+    "deleteMessage": "Die Abfrage \"{name}\" wurde erfolgreich gelöscht.",
+    "duplicateMessage": "Die Abfrage \"{name}\" wurde erfolgreich dupliziert."
   }
 }

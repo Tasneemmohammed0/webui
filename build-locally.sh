@@ -144,7 +144,7 @@ function generate_rest_client {
     # Set default SOURCE_MAVEN to development URL if not provided
     if [[ -z "$SOURCE_MAVEN" ]]; then        
         SOURCE_MAVEN="https://development.galasa.dev/main/maven-repo/obr"
-        warn "SOURCE_MAVEN env not set, defaulting to $SOURCE_MAVEN"
+        warn "SOURCE_MAVEN env not set, defaulting to $SOURCE_MAVEN. If you have a built version of maven then this will be used before SOURCE_MAVEN."
     fi
 
     # Execute Gradle command with SOURCE_MAVEN passed as a Gradle property
@@ -178,7 +178,14 @@ function generate_rest_client {
 
 function run_tests {
     cd ${BASEDIR}/galasa-ui
-    npm test -- --watchAll=false
+    
+    if [ "$IS_DEV_CONTAINER" = "true" ]; then
+        # Jest defaults to using all available CPU threads for parallel test execution. In a containerised environment, this can lead to high thread coordination overhead that slows things down, hence limit CPU cores by 50%.
+        npm test -- --maxWorkers=50% --watchAll=false
+    else
+        npm test -- --watchAll=false
+    fi
+
     rc=$?
     if [[ "${rc}" != "0" ]]; then
         error "Failing tests."

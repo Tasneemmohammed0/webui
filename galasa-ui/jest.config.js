@@ -26,7 +26,10 @@ const config = {
   transformIgnorePatterns: [
     '/node_modules/(?!(next-intl))', 
     '^.+\\.module\\.(css|sass|scss)$'
-  ]
+  ],
+
+  // Required for testing the image renderer
+  setupFiles: ['jest-canvas-mock'],
 
 };
 

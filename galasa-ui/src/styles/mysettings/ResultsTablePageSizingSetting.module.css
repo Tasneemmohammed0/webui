@@ -1,0 +1,31 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+
+.section {
+  width: 90%;
+  margin: 3rem auto;
+}
+
+.heading {
+  font-weight: 500;
+}
+
+.title {
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+.dropdownContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.5rem;
+}
+
+.dropdownContainer :global(.cds--dropdown) {
+  width: auto;
+  min-width: 5rem;
+}

@@ -9,6 +9,7 @@
 
 pluginManagement {
     repositories {
+        mavenLocal()
         maven {
             url "$sourceMaven"
         }

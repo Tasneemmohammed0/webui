@@ -30,6 +30,7 @@ exports[`MySettings Component renders correctly when user login id is found 1`] 
     refreshToken=""
   />
   <DateTimeSettings />
+  <ResultsTablePageSizingSetting />
   <ExperimentalFeaturesSection />
 </main>
 `;

@@ -10,19 +10,23 @@
 
 :root {
   @include themes.theme($white); /*Set default to white theme*/
+  color-scheme: light;
 }
 @media (prefers-color-scheme: white) {
   :root {
     @include themes.theme($g100); /*Use dark theme for dark system preference*/
+    color-scheme: dark;
   }
 }
 
 [data-carbon-theme='light'] {
   @include themes.theme($white);
+  color-scheme: light;
 }
 
 [data-carbon-theme='dark'] {
   @include themes.theme($g100);
+  color-scheme: dark;
 }
 
 body {
@@ -38,7 +42,7 @@ body {
 }
 
 main {
-  flex-grow: 1; //ensure the main content takes up all the space on the page
+  flex-grow: 1; //ensure the main content takes up all the space on the pages
 }
 
 code {
@@ -46,7 +50,8 @@ code {
 }
 
 #content {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   position: relative;
   margin-top: 3rem;
 

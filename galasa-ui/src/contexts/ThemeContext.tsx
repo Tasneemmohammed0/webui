@@ -43,6 +43,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       setTheme('system');
     }
     setIsLoaded(true);
+
+    // If you're adding extra state to this hook, make sure to review the dependency array due to the warning suppression:
+    // eslint-disable-next-line
   }, []);
 
   if (!isLoaded) return null; // Prevent flash by not rendering anything until theme is loaded

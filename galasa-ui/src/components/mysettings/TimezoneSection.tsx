@@ -5,7 +5,7 @@
  */
 'use client';
 import { useDateTimeFormat } from '@/contexts/DateTimeFormatContext';
-import styles from '@/styles/TimezoneSection.module.css';
+import styles from '@/styles/mysettings/TimezoneSection.module.css';
 import { PREFERENCE_KEYS } from '@/utils/constants/common';
 import { SUPPORTED_TIMEZONES } from '@/utils/constants/timezones';
 import { TimeZone } from '@/utils/types/dateTimeSettings';

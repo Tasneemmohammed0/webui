@@ -1,0 +1,53 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+
+{
+  "name": "Node.js & TypeScript",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/.m2",
+
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11",
+      "installZsh": "true",
+      "installJupyter": "false"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installGradle": "true",
+      "gradleVersion": "8.14.3"
+    }
+  },
+
+  "remoteUser": "node",
+
+  "mounts": [
+    "source=${localEnv:HOME}/.m2,target=/home/node/.m2,type=bind,consistency=cached",
+    "source=${localEnv:NODE_EXTRA_CA_CERTS},target=/home/node/certs.pem,type=bind,consistency=cached",
+    // This creates a named volume to host node_modules, isolating it from the slow bind mount.
+    // The volume name is derived from your project folder name for uniqueness.
+    "source=node_modules_cache,target=/workspaces/webui/galasa-ui/node_modules,type=volume"
+  ],
+
+  // Note: changing your local environment variables requires a vscode restart.
+  "containerEnv": {
+    "NODE_EXTRA_CA_CERTS":"/home/node/certs.pem",
+    "IS_DEV_CONTAINER": "true"
+  },
+
+  "forwardPorts": [3000],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+
+  "postCreateCommand": "bash -c 'sudo chown -R node:node /workspaces/webui/galasa-ui/node_modules && ./.devcontainer/dev-container-setup.sh \"${localEnv:GALASA_DEV_TOKEN}\" \"${localEnv:GALASA_API_SERVER_URL}\" \"${localEnv:SOURCE_MAVEN}\"'"
+}

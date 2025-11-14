@@ -6,6 +6,7 @@
 
 import { AuthenticationAPIApi } from '@/generated/galasaapi';
 import { createApiConfiguration, GALASA_API_SERVER_URL } from './api';
+import { encodeToBase64Url } from '@/utils/encoding/base64Encoder';
 
 export const GALASA_WEBUI_HOST_URL = process.env.GALASA_WEBUI_HOST_URL ?? '';
 
@@ -26,7 +27,8 @@ export const sendAuthRequest = async (
   clientId: string,
   clientCallbackUrl = `${GALASA_WEBUI_HOST_URL}/callback`
 ) => {
-  const authRequestUrl = `/auth?client_id=${clientId}&callback_url=${clientCallbackUrl}`;
+  const encodedCallbackUrl = encodeToBase64Url(clientCallbackUrl);
+  const authRequestUrl = `/auth?client_id=${clientId}&base64_callback_url=${encodedCallbackUrl}`;
 
   return await fetch(new URL(authRequestUrl, GALASA_API_SERVER_URL), {
     redirect: 'manual',

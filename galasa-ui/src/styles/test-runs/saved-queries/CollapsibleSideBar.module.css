@@ -1,0 +1,96 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+.container {
+  background-color: var(--cds-layer);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.headerMenuButton {
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.sidebarWrapper {
+  display: flex;
+  padding-top: 48px;
+}
+
+.sideNavExpanded,
+.sideNavCollapsed {
+  flex-shrink: 0;
+  transition:
+    width 0.2s ease-in-out,
+    max-width 0.2s ease-in-out;
+}
+
+.sideNavExpanded {
+  width: 320px;
+  max-width: 360px;
+  background-color: var(--cds-layer);
+  border-right: 1px solid var(--cds-border-subtle);
+  height: 800px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sideNavCollapsed {
+  width: 0;
+  max-width: 0;
+  border: none;
+}
+
+.innerContentWrapper {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.sideNavExpanded .innerContentWrapper {
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0.1s;
+}
+
+.toolbar {
+  display: flex;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--cds-layer);
+}
+
+.headerTitle {
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.7rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--cds-border-subtle);
+}
+
+.sideNavContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.notification {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1rem;
+  z-index: 9999;
+}

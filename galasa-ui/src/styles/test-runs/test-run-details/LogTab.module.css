@@ -1,0 +1,108 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+
+.warn {
+  color: #ffb74d;
+}
+
+.error {
+  color: #f44336;
+}
+
+.logContainer {
+  position: sticky;
+  top: 45px;
+  z-index: 10;
+  background: var(--cds-background, white);
+  padding-top: 2.2rem;
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.findControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--cds-background, white);
+  border: 1px solid var(--cds-border-subtle, #e0e0e0);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+.matchCounter {
+  font-size: 0.875rem;
+  color: var(--cds-text-secondary, #6f6f6f);
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.filterBtn {
+  flex-shrink: 0;
+}
+
+.logEntry {
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.lineNumberCol {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+  align-items: baseline;
+}
+
+.tabContent {
+  border: 1px solid var(--galasa-border);
+  border-top: none;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
+.runLog {
+  border: 1px solid var(--galasa-border);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.runLogContent {
+  width: 100%;
+}
+
+.highlight {
+  background-color: #ffeb3b;
+  color: #000;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.currentHighlight {
+  background-color: #ff9800;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 0 0 1px #ff9800;
+}
+
+.buttonDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

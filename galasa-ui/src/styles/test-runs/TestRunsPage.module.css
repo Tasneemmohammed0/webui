@@ -1,0 +1,401 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+.testRunsPage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.testRunsContentWrapper {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
+  padding: 5rem 4rem;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 1rem 0.5rem;
+  }
+}
+
+.tabsContainer {
+  height: 100%;
+}
+
+.titleText {
+  font-size: 1rem;
+  margin: 0.5rem 0.5rem;
+}
+
+.queryNameContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.queryNameBlock {
+  display: flex;
+  flex: 1;
+  padding: 0 1rem;
+  min-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .queryNameContainer {
+    flex-direction: column;
+  }
+
+  .queryNameBlock {
+    padding: 0 0.5rem;
+    min-width: 0;
+  }
+}
+
+.queryNameHeading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+  word-break: break-word;
+  margin: 0;
+  color: var(--cds-text-primary);
+  width: 100%;
+}
+
+.queryNameInput {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+  padding: 0.5rem;
+  border: none;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  width: 100%;
+  color: var(--cds-text-primary);
+  background-color: var(--cds-background, #ffffff);
+}
+
+.queryNameInput:focus {
+  outline-color: var(--cds-focus);
+}
+
+.searchCriteriaContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+@media (max-width: 992px) {
+  .searchCriteriaContainer {
+    flex-direction: column;
+  }
+}
+
+.structuredListContainer {
+  flex: 2;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid var(--cds-border-subtle, #e0e0e0);
+  min-width: 300px;
+}
+
+.filterInputContainer {
+  flex: 3;
+  padding: 1rem;
+}
+
+.checkBoxList {
+  flex: 3;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.customCheckboxAll {
+  padding-bottom: 1.5rem;
+}
+
+.rowWrapper {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  width: 100%;
+  cursor: pointer;
+}
+
+.rowWrapper > * {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  min-width: 0;
+}
+
+.selectedRow {
+  background-color: var(--cds-interactive-01, #0f62fe);
+  --cds-text-primary: var(--cds-text-on-color, #ffffff);
+  --cds-text-secondary: var(--cds-text-on-color, #ffffff);
+  --cds-border-subtle-01: transparent;
+  color: var(--cds-text-on-color, #ffffff);
+}
+
+.customComponentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.suggestionContainer {
+  position: relative;
+}
+
+.suggestionList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--cds-background, #161616);
+  border: 1px solid #ccc;
+  border-top: none;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.suggestionList li,
+.activeSuggestion {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.suggestionList li:hover {
+  background-color: rgba(136, 136, 136, 0.2);
+}
+
+.activeSuggestion {
+  background-color: var(--cds-background, rgba(136, 136, 136, 0.2));
+  cursor: pointer;
+}
+
+.buttonContainer,
+.tagsButtonContainer {
+  display: flex;
+  gap: 1rem;
+  padding-top: 2rem;
+}
+
+.buttonContainer > button,
+.tagsButtonContainer > button {
+  width: 15%;
+  height: 3rem;
+}
+
+.tagsButtonContainer {
+  justify-content: flex-end;
+}
+
+.resetToDefaultsButtonContainerSearchCriteria {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  width: 38%;
+}
+
+.resetToDefaultsButtonContainerTableDesign {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  width: 55%;
+  padding-bottom: 1rem;
+}
+
+.tagsListbox {
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--cds-border-subtle, #e0e0e0);
+  background-color: var(--cds-background, #ffffff);
+  color: var(--cds-text-primary, #161616);
+}
+
+.tagOption {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(136, 136, 136, 0.2);
+  }
+}
+
+.notification {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+/* Styles of the Table Design tab */
+
+.tableDesignContainer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #a8a8a8;
+  border-radius: 0;
+  width: 55%;
+  min-width: 500px;
+}
+
+@media (max-width: 768px) {
+  .tableDesignContainer {
+    width: 100%;
+    min-width: 300px;
+  }
+}
+
+.tableDesignRow,
+.tableDesignHeaderRow {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #a8a8a8;
+  padding: 0.2rem;
+}
+
+.tableDesignCheckboxHeader {
+  flex: 0 0 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.tableDesignIcons {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+  text-align: left;
+}
+
+.cellCheckbox {
+  flex: 0 0 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cellValue {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .cellValue {
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+  }
+}
+
+.cellDropdown {
+  flex: 0 0 120px;
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+}
+
+/* Remove border from the very last row */
+.tableDesignContainer > div:last-child > .tableDesignRow:last-child {
+  border-bottom: none;
+}
+
+.tableDesignHeaderRow {
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-bottom: 1px solid #393939;
+  overflow: auto;
+}
+
+.tableDesignHeaderRow .cellValue {
+  justify-content: center;
+  padding-right: 1.5rem;
+}
+
+.tableDesignHeaderRow .cellDragHandle {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+  text-align: left;
+}
+
+.cellDropdownHeader {
+  flex: 0 0 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 1rem;
+}
+
+.dragging {
+  opacity: 0.5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dragHandle {
+  cursor: grab;
+}
+
+.tableDesignRow.dragging .dragHandle {
+  cursor: grabbing;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+
+.toolbarActions {
+  position: absolute;
+  top: 50%;
+  right: 3rem;
+  transform: translateY(-50%);
+}
+
+.clickableRow {
+  cursor: pointer;
+}

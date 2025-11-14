@@ -17,6 +17,8 @@ jest.mock('next-intl', () => ({
     };
     return translations[key] || key;
   },
+  useLocale: () => 'en',
+  NextIntlClientProvider: ({ children }: any) => <>{children}</>,
 }));
 jest.mock('next-intl/server', () => ({
   getLocale: jest.fn(() => Promise.resolve('en')),

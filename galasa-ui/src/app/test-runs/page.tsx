@@ -11,9 +11,11 @@ export default async function TestRunsPage() {
   const resultsNamesPromise = getResultsNames();
 
   return (
-    <TestRunsDetails
-      requestorNamesPromise={requestorNamesPromise}
-      resultsNamesPromise={resultsNamesPromise}
-    />
+    <main id="content">
+      <TestRunsDetails
+        requestorNamesPromise={requestorNamesPromise}
+        resultsNamesPromise={resultsNamesPromise}
+      />
+    </main>
   );
 }

@@ -1,0 +1,93 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+.timeFrameContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5rem;
+}
+
+.fromContainer,
+.toContainer {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.divider {
+  width: 3px;
+  background-color: var(--cds-layer-01);
+  align-self: stretch;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: var(--cds-layer-01);
+  padding: 0.5rem;
+}
+
+.optionRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  height: 50%;
+}
+
+.nowDescription {
+  font-size: 0.9rem;
+  padding-left: 1.8rem;
+}
+
+.timeFrameFilterContainer {
+  display: flex;
+  gap: 2rem;
+  flex-grow: 1;
+}
+
+.durationFilterContainer {
+  display: flex;
+  flex-direction: column;
+}
+.durationInputsContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.durationInput {
+  max-width: 150px;
+}
+
+.notification {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.filterWrapper {
+  padding-left: 2rem;
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 1055px) {
+  .TimeFrameFilterContainer,
+  .formGroup {
+    flex-direction: column;
+  }
+
+  .DurationInputsContainer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

@@ -7,7 +7,7 @@
 
 import ErrorPage from '@/app/error/page';
 import { UserData } from '@/generated/galasaapi';
-import styles from '@/styles/MyProfile.module.css';
+import styles from '@/styles/profile/MyProfile.module.css';
 import { ProfileDetailsProps } from '@/utils/interfaces';
 import { Loading } from '@carbon/react';
 import { useTranslations } from 'next-intl';

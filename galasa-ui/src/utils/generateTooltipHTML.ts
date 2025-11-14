@@ -5,7 +5,7 @@
  */
 
 import { DataPoint } from './interfaces';
-import styles from '@/styles/TestRunsGraph.module.css';
+import styles from '@/styles/test-runs/graph/TestRunsGraph.module.css';
 
 export function getTooltipHTML(
   points: DataPoint[],
@@ -13,7 +13,7 @@ export function getTooltipHTML(
   formatDate = (date: Date) => new Date(date).toLocaleString()
 ) {
   const run = points[0]?.custom || {};
-  console.log('points', points);
+
   return `
     <div class="${styles.tooltipContent}">
       ${headerDefinitions

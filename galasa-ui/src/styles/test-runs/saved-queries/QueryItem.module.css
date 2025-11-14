@@ -1,0 +1,78 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+.sideNavItem {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background-color 0.15s ease-in-out;
+  padding: 0.3rem 0;
+  padding-right: 0.5rem;
+}
+
+.sideNavItem.collapsed {
+  display: none;
+}
+
+.dragHandle,
+.starIcon {
+  cursor: grab;
+  visibility: hidden;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.starIcon {
+  visibility: visible;
+  cursor: default;
+}
+
+.sideNavItem:hover {
+  background-color: var(--cds-layer-selected);
+}
+
+.sideNavItem:hover .dragHandle {
+  visibility: visible;
+}
+
+.dragging {
+  cursor: grabbing;
+  background-color: var(--cds-layer-selected);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dragging .dragHandle {
+  visibility: visible;
+}
+
+.sideNavLink {
+  text-decoration: none;
+  color: var(--cds-text-primary);
+  font-size: 0.875rem;
+  padding-right: 1rem;
+  flex-grow: 1;
+  outline: none;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.sideNavLink:hover,
+.sideNavLink:focus,
+.sideNavLink:active {
+  text-decoration: none;
+  color: var(--cds-text-primary);
+}
+
+.disabled {
+  cursor: default;
+}
+
+.overflowMenu:hover {
+  background-color: var(--cds-layer-selected);
+}

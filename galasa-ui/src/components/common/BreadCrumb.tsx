@@ -8,7 +8,7 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, OverflowMenuItem, OverflowMenu, Theme } from '@carbon/react';
 import '@/styles/global.scss';
-import styles from '@/styles/BreadCrumb.module.css';
+import styles from '@/styles/common/BreadCrumb.module.css';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/contexts/ThemeContext';
 import { BreadCrumbProps } from '@/utils/interfaces/components';

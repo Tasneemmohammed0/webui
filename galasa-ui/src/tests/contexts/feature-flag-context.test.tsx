@@ -75,8 +75,6 @@ describe('Feature Flags Provider and useFeatureFlags Hook', () => {
 
     const expectedCookieVal = JSON.stringify({
       [FEATURE_FLAGS.TEST_RUNS]: true,
-      [FEATURE_FLAGS.INTERNATIONALIZATION]: false,
-      [FEATURE_FLAGS.IS_3270_SCREEN_ENABLED]: false,
       [FEATURE_FLAGS.GRAPH]: false,
     });
 

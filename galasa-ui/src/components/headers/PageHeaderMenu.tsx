@@ -11,12 +11,8 @@ import { User } from '@carbon/icons-react';
 import { useRouter } from 'next/navigation';
 import { handleDeleteCookieApiOperation } from '@/utils/logout';
 import LanguageSelector from './LanguageSelector';
-import { useFeatureFlags } from '@/contexts/FeatureFlagContext';
-import { FEATURE_FLAGS } from '@/utils/featureFlags';
 import { useTranslations } from 'next-intl';
-import { setUserLocale } from '@/utils/locale';
 import ThemeSelector from './ThemeSelector';
-import { useTheme } from '@/contexts/ThemeContext';
 
 function PageHeaderMenu({ galasaServiceName }: { galasaServiceName: string }) {
   const translations = useTranslations('PageHeaderMenu');
@@ -30,19 +26,10 @@ function PageHeaderMenu({ galasaServiceName }: { galasaServiceName: string }) {
   const handleRedirectToMySettingsPage = () => {
     router.push('/mysettings');
   };
-  const { isFeatureEnabled } = useFeatureFlags();
-
-  const isInternationalizationEnabled = isFeatureEnabled(FEATURE_FLAGS.INTERNATIONALIZATION);
-
-  useEffect(() => {
-    if (!isInternationalizationEnabled) {
-      setUserLocale('en');
-    }
-  }, [isInternationalizationEnabled]);
 
   return (
     <HeaderGlobalBar data-testid="header-menu">
-      {isInternationalizationEnabled && <LanguageSelector />}
+      <LanguageSelector />
       <ThemeSelector />
       <HeaderName prefix="">{galasaServiceName}</HeaderName>
       <OverflowMenu

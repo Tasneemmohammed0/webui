@@ -1,0 +1,85 @@
+/*
+ * Copyright contributors to the Galasa project
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ */
+.container {
+  margin-right: 1rem;
+  display: flex; /* Removed the extra comma */
+  align-items: center;
+}
+
+.language {
+  margin-right: 0.5rem;
+  fill: white;
+}
+
+.dropdown {
+  background-color: transparent; /* Corrected to background-color */
+  color: white;
+  width: 120px;
+}
+
+.themeSwitcher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  width: fit-content;
+  background-color: #262626;
+}
+
+.iconButton {
+  background: #262626;
+  border: none;
+  padding: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.iconButton:hover {
+  background-color: #474747;
+}
+
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.active {
+  color: var(--cds-icon-on-color);
+}
+
+.overflowMenu {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #262626 !important;
+  color: white !important;
+  border-bottom: #525252 1px solid !important;
+}
+.overflowMenu:hover {
+  background-color: #474747 !important;
+}
+
+.overflowMenuItem {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.overflowMenuItemText {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.renderIcon {
+  fill: white;
+  width: 18px;
+  height: 18px;
+}

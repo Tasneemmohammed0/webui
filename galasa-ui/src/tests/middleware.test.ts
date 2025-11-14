@@ -5,6 +5,7 @@
  */
 import { middleware } from '@/middleware';
 import { authApiClient } from '@/utils/auth';
+import { encodeToBase64Url } from '@/utils/encoding/base64Encoder';
 import { NextRequest, NextResponse } from 'next/server';
 
 const originalEnv = process.env;
@@ -71,9 +72,8 @@ describe('Middleware', () => {
 
     // Fetch calls take the form 'fetch(<url>, <request-init>)', so get the URL that was passed in
     const fetchedUrl = fetchSpy.mock.calls[0][0];
-    expect(fetchedUrl.toString()).toContain(
-      `callback_url=http://mock-webui-host-url/runs/callback`
-    );
+    const expectedCallbackUrl = encodeToBase64Url('http://mock-webui-host-url/runs/callback');
+    expect(fetchedUrl.toString()).toContain(`base64_callback_url=${expectedCallbackUrl}`);
     fetchSpy.mockRestore();
   });
 
@@ -104,7 +104,86 @@ describe('Middleware', () => {
 
     // Fetch calls take the form 'fetch(<url>, <request-init>)', so get the URL that was passed in
     const fetchedUrl = fetchSpy.mock.calls[0][0];
-    expect(fetchedUrl.toString()).toContain(`callback_url=http://mock-webui-host-url/callback`);
+    const expectedCallbackUrl = encodeToBase64Url('http://mock-webui-host-url/callback');
+    expect(fetchedUrl.toString()).toContain(`base64_callback_url=${expectedCallbackUrl}`);
+    fetchSpy.mockRestore();
+  });
+
+  it('should send a callback URL with query parameters preserved after authenticating', async () => {
+    // Given...
+    const queryParams = 'myquery=1&myNextQuery=2';
+    const requestUrl = `https://galasa.service/my-page?${queryParams}`;
+    const req = new NextRequest(new Request(requestUrl), {});
+    const redirectUrl = 'http://my-connector/auth';
+
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(
+      jest.fn(() =>
+        Promise.resolve({
+          url: redirectUrl,
+          headers: {
+            get: jest.fn().mockReturnValue(redirectUrl),
+          },
+        })
+      ) as jest.Mock
+    );
+
+    // When...
+    await middleware(req);
+
+    // Then...
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(redirectSpy).toHaveBeenCalledTimes(1);
+    expect(redirectSpy).toHaveBeenCalledWith(redirectUrl, { status: 302 });
+
+    // Fetch calls take the form 'fetch(<url>, <request-init>)', so get the URL that was passed in
+    const fetchedUrl = fetchSpy.mock.calls[0][0];
+    const expectedCallbackUrl = encodeToBase64Url(
+      `http://mock-webui-host-url/my-page/callback?${queryParams}`
+    );
+    expect(fetchedUrl.toString()).toContain(`base64_callback_url=${expectedCallbackUrl}`);
+    fetchSpy.mockRestore();
+  });
+
+  it('should send a callback URL with query parameters encoded after authenticating', async () => {
+    // Given...
+    const query1Value = 'this:has:colons';
+    const query2Value = 'this has spaces';
+
+    const queryParams = new URLSearchParams({
+      myquery: query1Value,
+      mynextquery: query2Value,
+    });
+
+    const rawQueryParams = `myquery=${query1Value}&mynextquery=${query2Value}`;
+    const requestUrl = `https://galasa.service/my-page?${rawQueryParams}`;
+    const req = new NextRequest(new Request(requestUrl), {});
+    const redirectUrl = 'http://my-connector/auth';
+
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(
+      jest.fn(() =>
+        Promise.resolve({
+          url: redirectUrl,
+          headers: {
+            get: jest.fn().mockReturnValue(redirectUrl),
+          },
+        })
+      ) as jest.Mock
+    );
+
+    // When...
+    await middleware(req);
+
+    // Then...
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(redirectSpy).toHaveBeenCalledTimes(1);
+    expect(redirectSpy).toHaveBeenCalledWith(redirectUrl, { status: 302 });
+
+    // Fetch calls take the form 'fetch(<url>, <request-init>)', so get the URL that was passed in
+    const fetchedUrl = fetchSpy.mock.calls[0][0];
+    const expectedCallbackUrl = encodeToBase64Url(
+      `http://mock-webui-host-url/my-page/callback?${queryParams.toString()}`
+    );
+    expect(fetchedUrl.toString()).toContain(`base64_callback_url=${expectedCallbackUrl}`);
     fetchSpy.mockRestore();
   });
 
@@ -238,6 +317,44 @@ describe('Middleware', () => {
     expect(createTokenSpy).toHaveBeenCalledTimes(1);
     expect(response.cookies.get('refresh_token')?.value).toEqual(mockRefreshToken);
     expect(response.cookies.has('id_token')).toEqual(false);
+
+    createTokenSpy.mockReset();
+  });
+
+  it('should redirect back to the web UI with query parameters preserved', async () => {
+    // Given...
+    redirectSpy.mockRestore();
+
+    const expectedResponseUrl = 'https://galasa.service/mypage';
+    const queryParams = 'myquery=1&mynextquery=2';
+    const req = new NextRequest(
+      new Request(`${expectedResponseUrl}/callback?code=myauthcode&${queryParams}`),
+      {}
+    );
+    const redirectUrl = 'http://my-connector/auth';
+
+    req.cookies.set('client_id', 'my-client-id');
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        url: redirectUrl,
+      })
+    ) as jest.Mock;
+
+    const mockRefreshToken = 'mynewrefreshtoken';
+    const createTokenSpy = jest.spyOn(authApiClient, 'createToken').mockReturnValue(
+      Promise.resolve({
+        jwt: 'mynewjwt',
+        refreshToken: mockRefreshToken,
+      })
+    );
+
+    // When...
+    const response = await middleware(req);
+
+    // Then...
+    expect(response.status).toEqual(302);
+    expect(response.headers.get('Location')).toEqual(`${expectedResponseUrl}?${queryParams}`);
 
     createTokenSpy.mockReset();
   });

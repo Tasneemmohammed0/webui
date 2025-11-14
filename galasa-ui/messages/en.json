@@ -13,7 +13,7 @@
     "logout": "Log out"
   },
   "LanguageSelector": {
-    "label": "Language"
+    "tooltip": "Selected language"
   },
   "ThemeSelector": {
     "label": "Theme"
@@ -31,8 +31,6 @@
     "description": "Early access to new features. These are experimental and subject to change or removal.",
     "features": {
       "testRunSearch": "Test Run searching and viewing",
-      "internationalization": "Internationalization/Multiple language support",
-      "is3270ScreenEnabled": "Support for viewing and downloading 3270 terminals",
       "graph": "Test Run Graphs"
     }
   },
@@ -65,6 +63,11 @@
     "descriptionline2": "A token has the same access rights as the user who allocated it.",
     "deleteButtontext": "Delete {count} selected access token",
     "error": "Failed to fetch tokens from the Galasa API server"
+  },
+  "ResultsTablePageSizingSetting": {
+    "title": "Test Run Query Results",
+    "description": "Modifying this setting changes the default number of test run results which are shown on the test run table for all your queries.",
+    "defaultTestRunsLabel": "Default test run records per page of results"
   },
   "userRole": {
     "heading": "User Role",
@@ -189,20 +192,22 @@
   "LogTab": {
     "title": "Run Log",
     "description": "A step-by-step log of what happened over time when the Run was preparing a TestClass for execution, what happened when the TestClass was executed, and when the test environment was cleaned up. The RunLog is an Artifact, which can be downloaded and viewed.",
-    "search_placeholder": "Find in run log",
-    "no_matches": "No matches",
-    "match_counter": "{current} of {total}",
-    "match_previous": "Previous match",
-    "match_next": "Next match",
-    "match_case": "Match case",
-    "match_whole_word": "Match whole word",
-    "filters_menu_title": "Hide / Show Content",
-    "filter_error": "Error",
-    "filter_warn": "Warning",
-    "filter_info": "Info",
-    "filter_debug": "Debug",
-    "filter_trace": "Trace",
-    "download_button": "Download Run Log"
+    "searchPlaceholder": "Find in run log",
+    "noMatches": "No matches",
+    "matchCounter": "{current} of {total}",
+    "matchPrevious": "Previous match",
+    "matchNext": "Next match",
+    "matchCase": "Match case",
+    "matchWholeWord": "Match whole word",
+    "filtersMenuTitle": "Hide / Show Content",
+    "filterError": "Error",
+    "filterWarn": "Warning",
+    "filterInfo": "Info",
+    "filterDebug": "Debug",
+    "filterTrace": "Trace",
+    "downloadButton": "Download Run Log",
+    "copyPermalinkButton": "Copy permalink with selected lines",
+    "selectLinesToCreatePermalink": "Select log lines for permalink"
   },
   "MethodsTab": {
     "title": "Methods",
@@ -232,6 +237,23 @@
     "recentRunsLink": "View recent runs of the same test...",
     "runRetriesLink": "View all attempts of this test run..."
   },
+  "3270Tab": {
+    "Terminal": "Terminal",
+    "screenNumber": "Screen Number",
+    "searchPlaceholder": "Search",
+    "nextImage": "Next image",
+    "previousImage": "Previous image",
+    "copyImage": "Copy image to clipboard",
+    "downloadImage": "Download image",
+    "copiedTitle": "Image copy successful: ",
+    "copiedMessage": "The 3270 screenshot image has been successfully copied to your clipboard.",
+    "errorCopyTitle": "Image copy unsuccessful: ",
+    "copyFailedMessage": "The 3270 screenshot image has failed to copy to your clipboard. Error: ",
+    "copyNoCanvas": "canvas element not found.",
+    "copyNoBlob": "failed to get blob from canvas.",
+    "downloadErrortitle": "Image download unsuccessful: ",
+    "downloadFailedMessage": "The 3270 screenshot image has failed to be downloaded. Could not find canvas element to download image."
+  },
   "TestRunDetails": {
     "title": "Test Run: {runName}",
     "errorTitle": "Error",
@@ -260,7 +282,12 @@
     "copyMessage": "Copy page URL",
     "copiedTitle": "URL copy successful: ",
     "copiedMessage": "The URL for this page has been copied to the clipboard.",
-    "copyFailedMessage": "Failed to copy page URL"
+    "copyFailedMessage": "Failed to copy page URL",
+    "saveQuery": "Save Query",
+    "editQueryName": "Edit Query Name",
+    "nameExistsError": "A query with this name already exists.",
+    "queryUpdatedMessage": "The query has been updated successfully.",
+    "newQuerySavedMessage": "Your query \"{name}\" was successfully saved."
   },
   "TestRunSkeleton": {
     "status": "Status",
@@ -315,6 +342,7 @@
     "bundle": "Bundle",
     "package": "Package",
     "testName": "Test Name",
+    "testShortName": "Test Name (short)",
     "status": "Status",
     "tags": "Tags",
     "result": "Result",
@@ -327,7 +355,6 @@
       "title": "Limit Exceeded",
       "subtitle": "Your query returned more than {maxRecords} results. Showing the first {maxRecords} records. To avoid this in the future narrow your time frame or change your search criteria to return fewer results."
     },
-
     "timeFrameText": {
       "range": "Showing test runs submitted between {from} and {to}"
     }
@@ -351,14 +378,22 @@
     "notFoundDescription": "Unable to find a run with id: {id}"
   },
   "TimeFrame": {
-    "selectEnvelope": "Select the time envelope against which the submission time of each test run will be compared.",
-    "envelopeDescription": "Test runs submitted within this envelope will be shown in the results, subject to other filters being applied.",
+    "selectEnvelope": "Select the timeframe against which the submission time of each test run will be compared.",
+    "envelopeDescription": "Test runs submitted within this period will be shown in the results, subject to other filters being applied.",
     "invalidTimeFrame": "Invalid Time Frame",
     "autoCorrection": "Auto-Correction",
-    "toBeforeFrom": "'To' date cannot be before 'From' date.",
+    "toBeforeFromErrorMessage": "The 'From' time must be earlier than the 'To' time. Select a valid time range.",
+    "toBeforeFromWarningOnly": "'From' time is set to the future. Current query will return no results.",
     "dateRangeExceeded": "Date range cannot exceed {maxMonths} months; 'To' date has been adjusted.",
     "dateRangeCapped": "Date range was capped at the current time.",
-    "invalidTimeText": "Please enter a valid time in HH:MM format."
+    "invalidTimeText": "Please enter a valid time in HH:MM format.",
+    "specificTimeTitle": "A specific time",
+    "durationTitle": "Duration before '{boldTo}' time",
+    "boldTo": "To",
+    "nowTitle": "Now",
+    "nowDescription": "The time the query results are viewed or refreshed",
+    "from": "From",
+    "to": "To"
   },
   "DateTimePicker": {
     "invalidTimeText": "Please enter a valid time in HH:MM format.",
@@ -367,13 +402,10 @@
     "date": "Date",
     "time": "Time"
   },
-  "TimeFrameFilter": {
+  "DurationFilter": {
     "days": "Days",
     "hours": "Hours",
-    "minutes": "Minutes",
-    "from": "From",
-    "to": "To",
-    "duration": "Duration"
+    "minutes": "Minutes"
   },
   "SearchCriteriaContent": {
     "description": "Edit search criteria to describe the test results you wish to view. Remember to click 'Save' to preserve your changes to the query.",
@@ -475,5 +507,32 @@
     "none": "None",
     "asc": "Ascending",
     "desc": "Descending"
+  },
+  "CollapsibleSidebar": {
+    "newQuerySavedTitle": "New query created",
+    "newQuerySavedMessage": "Your query \"{name}\" was successfully saved.",
+    "savedQueries": "Saved Queries",
+    "savedQueriesHeaderLabel": "Saved Queries Header",
+    "savedQueriesSidebarLabel": "Saved Queries Sidebar",
+    "searchSavedQueries": "Search saved queries",
+    "addCurrentQuery": "Add current query"
+  },
+  "QueryItem": {
+    "dragHandle": "Drag to reorder",
+    "actions": "Actions",
+    "rename": "Rename...",
+    "delete": "Delete",
+    "copyToClipboard": "Copy to Clipboard",
+    "setAsDefault": "Set as Default",
+    "duplicate": "Duplicate",
+    "copiedTitle": "URL copy successful: ",
+    "copiedMessage": "The URL for query \"{name}\" has been copied to your clipboard.",
+    "errorTitle": "Error",
+    "successTitle": "Success",
+    "copyFailedMessage": "Failed to copy query \"{name}\" URL",
+    "setAsDefaultMessage": "Query \"{name}\" is now your default query.",
+    "deleteTitle": "Query Deleted ",
+    "deleteMessage": "The query \"{name}\" was deleted successfully.",
+    "duplicateMessage": "The query \"{name}\" was duplicated successfully."
   }
 }

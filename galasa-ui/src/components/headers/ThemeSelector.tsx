@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useTransition } from 'react';
-import styles from '@/styles/Selector.module.css';
+import styles from '@/styles/headers/Selector.module.css';
 import { ThemeType, useTheme } from '@/contexts/ThemeContext';
 import { Sun, Moon, Laptop } from '@carbon/icons-react';
 import { Tooltip } from '@carbon/react';

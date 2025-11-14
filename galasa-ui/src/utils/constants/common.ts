@@ -6,7 +6,7 @@
 
 import { ColumnDefinition } from '../interfaces';
 
-const CLIENT_API_VERSION = '0.43.0';
+const CLIENT_API_VERSION = '0.45.0';
 
 const COLORS = {
   RED: '#da1e28',
@@ -74,6 +74,7 @@ const RESULTS_TABLE_COLUMNS: ColumnDefinition[] = [
 const TEST_RUNS_QUERY_PARAMS = {
   FROM: 'from',
   TO: 'to',
+  DURATION: 'duration',
   RUN_NAME: 'runName',
   REQUESTOR: 'requestor',
   GROUP: 'group',
@@ -89,14 +90,16 @@ const TEST_RUNS_QUERY_PARAMS = {
   COLUMNS_ORDER: 'columnsOrder',
   TAB: 'tab',
   SORT_ORDER: 'sortOrder',
+  QUERY_NAME: 'queryName',
 };
 
 const SINGLE_RUN_QUERY_PARAMS = {
   TAB: 'tab',
   LOG_LINE: 'line',
+  TERMINAL_SCREEN: 'terminalScreen',
 } as const;
 
-const TABS_IDS = ['timeframe', 'table-design', 'search-criteria', 'results'];
+const TABS_IDS = ['timeframe', 'table-design', 'search-criteria', 'results', 'graph'];
 
 // Keys that are managed by the SearchCriteriaContent component
 const SEARCH_CRITERIA_KEYS = [
@@ -153,7 +156,9 @@ const PREFERENCE_KEYS = {
   TIME_ZONE: 'timeZone' as const,
 } as const;
 
-const TEST_RUN_PAGE_TABS = ['overview', 'methods', 'runLog', 'artifacts'];
+const TEST_RUN_PAGE_TABS = ['overview', 'methods', 'runLog', 'artifacts', '3270'];
+
+const RESULTS_TABLE_PAGE_SIZES = [10, 20, 30, 40, 50];
 
 export {
   CLIENT_API_VERSION,
@@ -178,4 +183,5 @@ export {
   TEST_RUN_PAGE_TABS,
   SINGLE_RUN_QUERY_PARAMS,
   LOCALE_TO_FLATPICKR_FORMAT_MAP,
+  RESULTS_TABLE_PAGE_SIZES,
 };
